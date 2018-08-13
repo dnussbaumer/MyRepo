@@ -1,4 +1,4 @@
-List call(List configList, file) {
+def call(List configList, file) {
     def endingOuterIndex = configList.size() - 1
     def endingInnerIndex = 0
     def changeFound = 'false'
