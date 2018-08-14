@@ -1,6 +1,4 @@
-@Library('LeavePro.AT.Pipeline')
-import reed.leavepro.poll.change
-def myChange = new reed.leavepro.poll.change()
+def myChange = library('LeavePro.AT.Pipeline')reed.leavepro.poll.change()
 
 pipeline {
     agent any
