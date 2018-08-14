@@ -1,3 +1,7 @@
+@Library('changes')
+import reed.leavepro.poll.change
+def myChange = new reed.leavepro.poll.change()
+
 pipeline {
     agent any
     environment {
@@ -45,7 +49,6 @@ pipeline {
                     List dbConfigList = []
                     List dbResultList = []
                     changeLines = ''
-                    def myChange = new reed.leavepro.poll.change()
                     //while(build != null && build.result != 'SUCCESS') {
                     while(build != null) {
                         for (changeLog in build.changeSets) {
