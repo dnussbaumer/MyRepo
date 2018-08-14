@@ -1,4 +1,4 @@
-def myChange = library('github.com/dnussbaumer/MyRepo/tree/master/LeavePro.AT.Pipeline')reed.leavepro.poll.change()
+@Library('LeavePro.AT.Pipeline')_
 
 pipeline {
     agent any
@@ -59,7 +59,7 @@ pipeline {
                                     configList = [
                                         ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
                                     ]
-                                    packCCF = myChange.findChanges(configList, file)
+                                    packCCF = findChanges configList, file
                                     configList = [
                                         [["Platform",buildPlatform,["\$/Gold/Platform/AT/etc/src/Services"]],
                                         ["Benefits",buildPlatform,["\$/Gold/Platform/AT/etc/src/Benefits"]],
@@ -68,35 +68,35 @@ pipeline {
                                         ["BenefitsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Beneftis"]],
                                         ["ToolsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Tools"]]]
                                     ]
-                                    buildPlatform = myChange.findChanges(configList[0], file)
-                                    buildPlatformDb = myChange.findChanges(configList[1], file)
+                                    buildPlatform = findChanges configList[0], file
+                                    buildPlatformDb = findChanges configList[1], file
                                     configList = [
                                         [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
                                         [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
                                         [["SaaSDB",buildSaaSDb,["\$/SaaS/AT/Database/CoreDatabases-branch"]]]
                                     ]
-                                    buildSaaS = myChange.findChanges(configList[0], file)
-                                    deploySaaSSSRS = myChange.findChanges(configList[1], file)
-                                    buildSaaSDb = myChange.findChanges(configList[2], file)
+                                    buildSaaS = findChanges configList[0], file
+                                    deploySaaSSSRS = findChanges configList[1], file
+                                    buildSaaSDb = findChanges configList[2], file
                                     configList = [
                                         [["Curly",buildCurly,["\$/Curly/AT/Source Code","\$/Curly/AT/Configuration/CustomScripts"]]],
                                         [["CurlySSRS",deployCurlySSRS,["\$/Curly/AT/Source Code/iAM.Reporting","\$/Curly/AT/Source Code/Reed.Reporting"]]],
                                         [["CurlyDB",buildCurlyDb,["\$/Curly/AT/Database/CoreDatabases-branch"]]]
                                     ]
-                                    buildCurly = myChange.findChanges(configList[0], file)
-                                    deployCurlySSRS = myChange.findChanges(configList[1], file)
-                                    buildCurlyDb = myChange.findChanges(configList[2], file)
+                                    buildCurly = findChanges configList[0], file
+                                    deployCurlySSRS = findChanges configList[1], file
+                                    buildCurlyDb = findChanges configList[2], file
                                     configList = [
                                         ["Larry",buildLarrySS,["\$/Larry/AT/Source Code/Reed.Web.SelfService"]]
                                     ]
-                                    buildLarrySS = myChange.findChanges(configList, file)
+                                    buildLarrySS = findChanges configList, file
                                     
                                     dbConfigList = [
                                         ["Platform",buildStgPlatform,"-BuildHub ",["\$/Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas"]],
                                         ["Platform",buildStgPlatform,"-BuildClient ",["\$/Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas"]],
                                         ["Platform",buildStgPlatform,"-BuildReport ",["\$/Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas"]]
                                     ]
-                                    dbResultList = myChange.findDbChanges(dbConfigList, file)
+                                    dbResultList = findDbChanges dbConfigList, file
                                     buildStgPlatform = dbResultList[0]
                                     optionLine = dbResultList[1]
                                     if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
@@ -107,7 +107,7 @@ pipeline {
                                         ["Benefits",buildStgBenefits,"-BuildHub ",["\$/Gold/Platform/AT/db/Benefits/BenefitsHubDb/Schema Objects/Schemas"]],
                                         ["Benefits",buildStgBenefits,"-BuildClient ",["\$/Gold/Platform/AT/db/Benefits/BenefitsClientDb/Schema Objects/Schemas"]]
                                     ]
-                                    dbResultList = myChange.findDbChanges(dbConfigList, file)
+                                    dbResultList = findDbChanges dbConfigList, file
                                     buildStgBenefits = dbResultList[0]
                                     optionLine = dbResultList[1]
                                     if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
@@ -116,7 +116,7 @@ pipeline {
                                     dbConfigList = [    
                                         ["Tools",buildStgTools,"Tools",["\$/Gold/Platform/AT/db/Tools/Schema Objects"]]
                                     ]
-                                    dbResultList = myChange.findDbChanges(dbConfigList, file)
+                                    dbResultList = findDbChanges dbConfigList, file
                                     buildStgTools = dbResultList[0]
                                     optionLine = dbResultList[1]
                                     if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
@@ -127,7 +127,7 @@ pipeline {
                                         ["SaaS",buildStgSaaS,"-BuildClient ",["\$/SaaS/AT/Database/CoreDatabases/LeaveClientDb_SaaS/Schema Objects/Schemas"]],
                                         ["SaaS",buildStgSaaS,"-BuildReport ",["\$/SaaS/AT/Database/CoreDatabases/ReportDb_SaaS/Schema Objects/Schemas"]]
                                     ]
-                                    dbResultList = myChange.findDbChanges(dbConfigList, file)
+                                    dbResultList = findDbChanges dbConfigList, file
                                     buildStgSaaS = dbResultList[0]
                                     optionLine = dbResultList[1]
                                     if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
@@ -138,7 +138,7 @@ pipeline {
                                         ["Curly",buildStgCurly,"-BuildClient ",["\$/Curly/AT/Database/CoreDatabases/LeaveClientDb_Curly/Schema Objects/Schemas"]],
                                         ["Curly",buildStgCurly,"-BuildReport ",["\$/Curly/AT/Database/CoreDatabases/ReportDb_Curly/Schema Objects/Schemas"]]
                                     ]
-                                    dbResultList = myChange.findDbChanges(dbConfigList, file)
+                                    dbResultList = findDbChanges dbConfigList, file
                                     buildStgCurly = dbResultList[0]
                                     optionLine = dbResultList[1]
                                     if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){
