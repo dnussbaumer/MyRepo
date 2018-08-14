@@ -1,4 +1,4 @@
-def myChange = library('LeavePro.AT.Pipeline')reed.leavepro.poll.change()
+def myChange = library('github.com/dnussbaumer/MyRepo/tree/master/LeavePro.AT.Pipeline')reed.leavepro.poll.change()
 
 pipeline {
     agent any
