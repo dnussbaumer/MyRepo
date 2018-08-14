@@ -1,4 +1,4 @@
-@Library('LeavePro_AT_Pipeline_Libs')_
+@Library('MyRepo')_
 
 pipeline {
     agent any
