@@ -74,7 +74,14 @@ pipeline {
 				echo 'Packing CCF...'
 				dir('ccfDir') {
 					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
-                                        nugetPack "${WORKSPACE}", "${version}", "${packageLocation}"
+                                        script {
+                                            def nuspecLocations = ["${WORKSPACE}\\ccfDir\\UAT\\AT_CCF.nuspec"]
+                                            bat 'if exist artifacts rmdir artifacts /s /q'
+                                            bat 'mkdir artifacts'
+                                            nugetPack "${nuspecLocations}", "${version}"
+                                            bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform ccfDir/artifacts/AT_CCF.${version}.nupkg"
+                                        }
+                                        
 				}
 //				bat 'if exist ccfDir\\artifacts rmdir ccfDir\\artifacts /s /q'
 //				bat 'mkdir ccfDir\\artifacts'
@@ -595,4 +602,3 @@ pipeline {
 		}
 	}
 }
-
