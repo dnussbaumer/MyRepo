@@ -51,7 +51,7 @@ pipeline {
 		deployChannel='Test' 		//Set Octopus deployment channel. Values are 'Test' or 'Release'
 		packageLocation = '//COAUTFSARH001/Builds/TEST'
 		dbBuildLocation = '\\\\COAUTFSARH001\\Builds/AT'
-                version = '3.1.${BUILD_NUMBER}'
+                version = "3.1.${BUILD_NUMBER}"
 		deployPrefix='CI_Test_'
 		deployRS="${env.DeployRS}"
 		deploySaaS="${env.DeploySaaS}"
