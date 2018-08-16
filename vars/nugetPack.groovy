@@ -1,4 +1,4 @@
-def call(nuspecLocations, version) {
+def call(nuspecLocations, packageLocation, version) {
     def batCommand = ""
     def endingIndex = nuspecLocations.size() - 1
     bat 'if exist artifacts rmdir artifacts /s /q'
@@ -7,5 +7,6 @@ def call(nuspecLocations, version) {
         batCommand += "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"${nuspecLocations[i]}\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis\n"
     }
     bat batCommand
+    bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts/*.${version}.nupkg"
 }
 
