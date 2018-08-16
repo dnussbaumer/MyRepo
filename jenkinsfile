@@ -77,14 +77,9 @@ pipeline {
                                         script {
                                             List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
                                             nugetPack nuspecLocations, packageLocation, "${version}"
-//                                            bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts/AT_CCF.${version}.nupkg"
                                         }
                                         
 				}
-//				bat 'if exist ccfDir\\artifacts rmdir ccfDir\\artifacts /s /q'
-//				bat 'mkdir ccfDir\\artifacts'
-//				bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"%WORKSPACE%\\ccfDir\\UAT\\AT_CCF.nuspec\" -Version 3.1.${BUILD_NUMBER} -OutputDirectory ccfDir/artifacts/ -NoPackageAnalysis"
-//				bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform ccfDir/artifacts/AT_CCF.3.1.${BUILD_NUMBER}.nupkg"
 			}
 		}
 		stage('Build Plat Stage') {
@@ -281,43 +276,79 @@ pipeline {
 				
 //								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\src\\Services\\Reed.Platform.sln\""
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
+                                                                script {
+                                                                    List nuspecLocations = ["etc/src/Services/Reed.Communication/Reed.SvcHost.Communication/Reed.SvcHost.Communication.CI.nuspec",
+                                                                        "etc/src/Services/Reed.CommunicationIntegration/Reed.CommunicationIntegration.Service/Reed.CommunicationIntegration.Service.CI.nuspec",
+                                                                        "etc/src/Services/Reed.DocumentManager/Reed.SvcHost.DocumentManager/Reed.SvcHost.DocumentManager.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Eligibility/Reed.SvcHost.Eligibility/Reed.SvcHost.Eligibility.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Email/Reed.SvcHost.Email/Reed.SvcHost.Email.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Employee/Reed.SvcHost.Employee/Reed.SvcHost.Employee.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Employer/Reed.SvcHost.Employer/Reed.SvcHost.Employer.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Leave/Reed.SvcHost.Leave/Reed.SvcHost.Leave.CI.nuspec",
+                                                                        "etc/src/Services/Reed.LeaveIntegration/Reed.SvcHost.LeaveIntegration/Reed.SvcHost.LeaveIntegration.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Letters/Reed.SvcHost.Letters/Reed.SvcHost.Letters.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Letters/Reed.SvcHost.Letters.Fulfillment/Reed.SvcHost.Letters.Fulfillment.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Ivr/Reed.Ivr.SvcHost/Reed.SvcHost.Ivr.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Ivr/Reed.Ivr.Service/Reed.Ivr.Service.CI.nuspec",
+                                                                        "etc/src/Services/Reed.MDGuidelines/Reed.SvcHost.MDGuidelines/Reed.SvcHost.MDGuidelines.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Note/Reed.SvcHost.Note/Reed.SvcHost.Note.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Pem/Reed.SvcHost.Pem/Reed.SvcHost.Pem.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Postal/Reed.SvcHost.Postal/Reed.SvcHost.Postal.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Reporting/Reed.SvcHost.Reporting/Reed.SvcHost.Reporting.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Reporting/Reed.SsReporting/Reed.SvcHost.SsReporting/Reed.SvcHost.SsReporting.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Roster/Reed.SvcHost.Roster/Reed.SvcHost.Roster.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Security/Reed.SvcHost.Security/Reed.SvcHost.Security.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Takeover/Reed.SvcHost.Takeover/Reed.SvcHost.Takeover.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Task/Reed.SvcHost.Task/Reed.SvcHost.Task.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Usage/Reed.SvcHost.Usage/Reed.SvcHost.Usage.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Wizard/Reed.SvcHost.Wizard/Reed.SvcHost.Wizard.CI.nuspec",
+                                                                        "etc/src/Services/Reed.LeaveIntegration/Reed.LeaveIntegration.Service/Reed.LeaveIntegration.Service.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Roster/Reed.EmployeeIntegration.Service/Reed.EmployeeIntegration.Service.CI.nuspec",
+                                                                        "etc/src/Services/Reed.Web/Reed.Web.SvcHost.Internal/Reed.Web.SvcHost.Internal.CI.nuspec",
+                                                                        "etc/src/Services/Utility/Reed.CCS.ConsoleApp/Reed.CCS.ConsoleApp.CI.nuspec",
+                                                                        "etc/src/Services/Utility/Reed.CacheClearerUi/Reed.CacheClearerUi.CI.nuspec",
+                                                                        "etc/src/Services/Utility/Reed.RosterConverter/Reed.RosterConverter/Reed.RosterConverter.CI.nuspec",
+                                                                        "etc/install/Deploy/Deploy.CI.nuspec",
+                                                                        "etc/src/Services/Reed.GAC.nuspec"]
+                                                                    nugetPack nuspecLocations, packageLocation, "${version}"
+                                                                }
 					
-								bat 'if exist artifacts rmdir artifacts /s /q\n' +
-								'mkdir artifacts'
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Communication/Reed.SvcHost.Communication/Reed.SvcHost.Communication.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.CommunicationIntegration/Reed.CommunicationIntegration.Service/Reed.CommunicationIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.DocumentManager/Reed.SvcHost.DocumentManager/Reed.SvcHost.DocumentManager.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Eligibility/Reed.SvcHost.Eligibility/Reed.SvcHost.Eligibility.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Email/Reed.SvcHost.Email/Reed.SvcHost.Email.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Employee/Reed.SvcHost.Employee/Reed.SvcHost.Employee.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Employer/Reed.SvcHost.Employer/Reed.SvcHost.Employer.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Leave/Reed.SvcHost.Leave/Reed.SvcHost.Leave.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.LeaveIntegration/Reed.SvcHost.LeaveIntegration/Reed.SvcHost.LeaveIntegration.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Letters/Reed.SvcHost.Letters/Reed.SvcHost.Letters.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Letters/Reed.SvcHost.Letters.Fulfillment/Reed.SvcHost.Letters.Fulfillment.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Ivr/Reed.Ivr.SvcHost/Reed.SvcHost.Ivr.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Ivr/Reed.Ivr.Service/Reed.Ivr.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.MDGuidelines/Reed.SvcHost.MDGuidelines/Reed.SvcHost.MDGuidelines.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Note/Reed.SvcHost.Note/Reed.SvcHost.Note.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Pem/Reed.SvcHost.Pem/Reed.SvcHost.Pem.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Postal/Reed.SvcHost.Postal/Reed.SvcHost.Postal.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Reporting/Reed.SvcHost.Reporting/Reed.SvcHost.Reporting.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Reporting/Reed.SsReporting/Reed.SvcHost.SsReporting/Reed.SvcHost.SsReporting.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Roster/Reed.SvcHost.Roster/Reed.SvcHost.Roster.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Security/Reed.SvcHost.Security/Reed.SvcHost.Security.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Takeover/Reed.SvcHost.Takeover/Reed.SvcHost.Takeover.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Task/Reed.SvcHost.Task/Reed.SvcHost.Task.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Usage/Reed.SvcHost.Usage/Reed.SvcHost.Usage.CI.nuspec\" -Version 3.1.${BUILD_NUMBER} -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Wizard/Reed.SvcHost.Wizard/Reed.SvcHost.Wizard.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.LeaveIntegration/Reed.LeaveIntegration.Service/Reed.LeaveIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Roster/Reed.EmployeeIntegration.Service/Reed.EmployeeIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Web/Reed.Web.SvcHost.Internal/Reed.Web.SvcHost.Internal.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.CCS.ConsoleApp/Reed.CCS.ConsoleApp.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.CacheClearerUi/Reed.CacheClearerUi.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.RosterConverter/Reed.RosterConverter/Reed.RosterConverter.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/install/Deploy/Deploy.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.GAC.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts\\*.nupkg"
+//								bat 'if exist artifacts rmdir artifacts /s /q\n' +
+//								'mkdir artifacts'
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Communication/Reed.SvcHost.Communication/Reed.SvcHost.Communication.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.CommunicationIntegration/Reed.CommunicationIntegration.Service/Reed.CommunicationIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.DocumentManager/Reed.SvcHost.DocumentManager/Reed.SvcHost.DocumentManager.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Eligibility/Reed.SvcHost.Eligibility/Reed.SvcHost.Eligibility.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Email/Reed.SvcHost.Email/Reed.SvcHost.Email.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Employee/Reed.SvcHost.Employee/Reed.SvcHost.Employee.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Employer/Reed.SvcHost.Employer/Reed.SvcHost.Employer.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Leave/Reed.SvcHost.Leave/Reed.SvcHost.Leave.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.LeaveIntegration/Reed.SvcHost.LeaveIntegration/Reed.SvcHost.LeaveIntegration.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Letters/Reed.SvcHost.Letters/Reed.SvcHost.Letters.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Letters/Reed.SvcHost.Letters.Fulfillment/Reed.SvcHost.Letters.Fulfillment.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Ivr/Reed.Ivr.SvcHost/Reed.SvcHost.Ivr.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Ivr/Reed.Ivr.Service/Reed.Ivr.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.MDGuidelines/Reed.SvcHost.MDGuidelines/Reed.SvcHost.MDGuidelines.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Note/Reed.SvcHost.Note/Reed.SvcHost.Note.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Pem/Reed.SvcHost.Pem/Reed.SvcHost.Pem.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Postal/Reed.SvcHost.Postal/Reed.SvcHost.Postal.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Reporting/Reed.SvcHost.Reporting/Reed.SvcHost.Reporting.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Reporting/Reed.SsReporting/Reed.SvcHost.SsReporting/Reed.SvcHost.SsReporting.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Roster/Reed.SvcHost.Roster/Reed.SvcHost.Roster.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Security/Reed.SvcHost.Security/Reed.SvcHost.Security.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Takeover/Reed.SvcHost.Takeover/Reed.SvcHost.Takeover.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Task/Reed.SvcHost.Task/Reed.SvcHost.Task.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Usage/Reed.SvcHost.Usage/Reed.SvcHost.Usage.CI.nuspec\" -Version 3.1.${BUILD_NUMBER} -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Wizard/Reed.SvcHost.Wizard/Reed.SvcHost.Wizard.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.LeaveIntegration/Reed.LeaveIntegration.Service/Reed.LeaveIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Roster/Reed.EmployeeIntegration.Service/Reed.EmployeeIntegration.Service.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.Web/Reed.Web.SvcHost.Internal/Reed.Web.SvcHost.Internal.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.CCS.ConsoleApp/Reed.CCS.ConsoleApp.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.CacheClearerUi/Reed.CacheClearerUi.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Utility/Reed.RosterConverter/Reed.RosterConverter/Reed.RosterConverter.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/install/Deploy/Deploy.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"etc/src/Services/Reed.GAC.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts\\*.nupkg"
 					
 								//****Build Benefits****
 //								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\PlatDir\\etc\\src\\Benefits\\Benefits.sln\""
