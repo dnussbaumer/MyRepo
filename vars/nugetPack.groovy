@@ -1,11 +1,10 @@
 def call(nuspecLocations, version) {
-    echo "In Method"
+    def batCommand = ""
     def endingIndex = nuspecLocations.size() - 1
     for (i in 0..endingIndex) {
-        echo "In Loop"
-        bat "echo \"hello\""
-//        echo "bat \"\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"${nuspecLocations[i]}\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis\""
+        batCommand += "bat \"\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"${nuspecLocations[i]}\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis\"\n"
 //        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"${nuspecLocations[i]}\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis"
     }
+    return batCommand
 }
 
