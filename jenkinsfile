@@ -77,7 +77,9 @@ pipeline {
                                         script {
                                             List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
                                             def configFilePath = "${WORKSPACE}\\resources\\ccfNuspecConfig.txt"
-                                            nugetPack configFilePath, "${packageLocation}/Platform", "${version}"
+                                            def configText = readFile(configFilePath)
+                                            echo configText
+                                            nugetPack configText, "${packageLocation}/Platform", "${version}"
 //                                            nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
                                         }
                                         
