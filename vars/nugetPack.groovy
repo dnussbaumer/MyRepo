@@ -1,6 +1,8 @@
-def call(nuspecLocations, packageLocation, version) {
+def call(configFilePath, packageLocation, version) {
     def batCommand = ""
     def endingIndex = nuspecLocations.size() - 1
+    def configText = readFile(configFilePath)
+    echo configFilePath
     bat 'if exist artifacts rmdir artifacts /s /q'
     bat 'mkdir artifacts'
     for (i in 0..endingIndex) {
