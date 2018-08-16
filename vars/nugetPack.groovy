@@ -1,9 +1,6 @@
 def call(project, configFilePath, packageLocation, version) {
-    echo "Entering Method"
     def batCommand = ""
-
     def configText = readFile(configFilePath)
-    echo configText
     def configLines = configText.split('\n')
     def nuspecLocations = []
     def nuspecLocationIndex = 0
