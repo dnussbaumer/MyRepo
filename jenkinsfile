@@ -76,7 +76,7 @@ pipeline {
 					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                                         script {
                                             List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
-                                            nugetPack nuspecLocations, packageLocation, "${version}"
+                                            nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
                                         }
                                         
 				}
@@ -310,14 +310,14 @@ pipeline {
                                                                         "etc/src/Services/Utility/Reed.RosterConverter/Reed.RosterConverter/Reed.RosterConverter.CI.nuspec",
                                                                         "etc/install/Deploy/Deploy.CI.nuspec",
                                                                         "etc/src/Services/Reed.GAC.nuspec"]
-                                                                    nugetPack nuspecLocations, packageLocation, "${version}"
+                                                                    nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
                                                                 }
 					
 								//****Build Benefits****
                                                                 script {
                                                                     List nuspecLocations = ["etc/src/Benefits/Web/Reed.Benefits.Web/Reed.Benefits.Web.CI.nuspec",
                                                                         "etc/src/Benefits/Services/Reed.Benefits.ServiceHost/Reed.Benefits.ServiceHost.CI.nuspec"]
-                                                                    nugetPack nuspecLocations, packageLocation, "${version}"
+                                                                    nugetPack nuspecLocations, "${packageLocation}/Benefits", "${version}"
                                                                 }
 					
 								//****Build Tools****
@@ -325,7 +325,7 @@ pipeline {
                                                                     List nuspecLocations = ["etc/src/Tools/Web/Reed.Tools.Web/Reed.Tools.Web.CI.nuspec",
                                                                         "etc/src/Tools/Web/Reed.Tools.ServiceHost/Reed.Tools.ServiceHost.CI.nuspec",
                                                                         "etc/src/Tools/Deployment/Reed.Tools.DeploymentService/Reed.Tools.DeploymentService.CI.nuspec"]
-                                                                    nugetPack nuspecLocations, packageLocation, "${version}"
+                                                                    nugetPack nuspecLocations, "${packageLocation}/Tools", "${version}"
                                                                 }
 							}
 						}				
