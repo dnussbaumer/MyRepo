@@ -1,9 +1,9 @@
 def call(configText, packageLocation, version) {
     echo "Entering Method"
     def batCommand = ""
-    def endingIndex = nuspecLocations.size() - 1
+//    def endingIndex = nuspecLocations.size() - 1
     
-//    echo configText
+    echo configText
 //    bat 'if exist artifacts rmdir artifacts /s /q'
 //    bat 'mkdir artifacts'
 //    for (i in 0..endingIndex) {
