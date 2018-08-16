@@ -1,4 +1,4 @@
-yay@Library('MyRepo')_
+@Library('MyRepo')_
 
 pipeline {
     //agent { label 'archive01' }
