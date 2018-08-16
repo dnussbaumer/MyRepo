@@ -78,8 +78,8 @@ pipeline {
                                             List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
                                             bat 'if exist artifacts rmdir artifacts /s /q'
                                             bat 'mkdir artifacts'
-//                                            nugetPack nuspecLocations, "${version}"
-                                            bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"UAT\\AT_CCF.nuspec\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis"
+                                            nugetPack nuspecLocations, "${version}"
+//                                            bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"UAT\\AT_CCF.nuspec\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis"
                                             bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts/AT_CCF.${version}.nupkg"
                                         }
                                         
