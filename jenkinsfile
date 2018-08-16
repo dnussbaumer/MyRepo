@@ -75,12 +75,8 @@ pipeline {
 				dir('ccfDir') {
 					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                                         script {
-                                            List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
-                                            def configFilePath = "${WORKSPACE}\\resources\\ccfNuspecConfig.txt"
-//                                            def configText = readFile(configFilePath)
-//                                            echo configText
+                                            def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
                                             nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${version}"
-//                                            nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
                                         }
                                         
 				}
@@ -281,55 +277,20 @@ pipeline {
 //								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\src\\Services\\Reed.Platform.sln\""
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
                                                                 script {
-                                                                    List nuspecLocations = ["etc/src/Services/Reed.Communication/Reed.SvcHost.Communication/Reed.SvcHost.Communication.CI.nuspec",
-                                                                        "etc/src/Services/Reed.CommunicationIntegration/Reed.CommunicationIntegration.Service/Reed.CommunicationIntegration.Service.CI.nuspec",
-                                                                        "etc/src/Services/Reed.DocumentManager/Reed.SvcHost.DocumentManager/Reed.SvcHost.DocumentManager.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Eligibility/Reed.SvcHost.Eligibility/Reed.SvcHost.Eligibility.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Email/Reed.SvcHost.Email/Reed.SvcHost.Email.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Employee/Reed.SvcHost.Employee/Reed.SvcHost.Employee.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Employer/Reed.SvcHost.Employer/Reed.SvcHost.Employer.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Leave/Reed.SvcHost.Leave/Reed.SvcHost.Leave.CI.nuspec",
-                                                                        "etc/src/Services/Reed.LeaveIntegration/Reed.SvcHost.LeaveIntegration/Reed.SvcHost.LeaveIntegration.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Letters/Reed.SvcHost.Letters/Reed.SvcHost.Letters.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Letters/Reed.SvcHost.Letters.Fulfillment/Reed.SvcHost.Letters.Fulfillment.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Ivr/Reed.Ivr.SvcHost/Reed.SvcHost.Ivr.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Ivr/Reed.Ivr.Service/Reed.Ivr.Service.CI.nuspec",
-                                                                        "etc/src/Services/Reed.MDGuidelines/Reed.SvcHost.MDGuidelines/Reed.SvcHost.MDGuidelines.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Note/Reed.SvcHost.Note/Reed.SvcHost.Note.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Pem/Reed.SvcHost.Pem/Reed.SvcHost.Pem.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Postal/Reed.SvcHost.Postal/Reed.SvcHost.Postal.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Reporting/Reed.SvcHost.Reporting/Reed.SvcHost.Reporting.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Reporting/Reed.SsReporting/Reed.SvcHost.SsReporting/Reed.SvcHost.SsReporting.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Roster/Reed.SvcHost.Roster/Reed.SvcHost.Roster.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Security/Reed.SvcHost.Security/Reed.SvcHost.Security.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Takeover/Reed.SvcHost.Takeover/Reed.SvcHost.Takeover.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Task/Reed.SvcHost.Task/Reed.SvcHost.Task.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Usage/Reed.SvcHost.Usage/Reed.SvcHost.Usage.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Wizard/Reed.SvcHost.Wizard/Reed.SvcHost.Wizard.CI.nuspec",
-                                                                        "etc/src/Services/Reed.LeaveIntegration/Reed.LeaveIntegration.Service/Reed.LeaveIntegration.Service.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Roster/Reed.EmployeeIntegration.Service/Reed.EmployeeIntegration.Service.CI.nuspec",
-                                                                        "etc/src/Services/Reed.Web/Reed.Web.SvcHost.Internal/Reed.Web.SvcHost.Internal.CI.nuspec",
-                                                                        "etc/src/Services/Utility/Reed.CCS.ConsoleApp/Reed.CCS.ConsoleApp.CI.nuspec",
-                                                                        "etc/src/Services/Utility/Reed.CacheClearerUi/Reed.CacheClearerUi.CI.nuspec",
-                                                                        "etc/src/Services/Utility/Reed.RosterConverter/Reed.RosterConverter/Reed.RosterConverter.CI.nuspec",
-                                                                        "etc/install/Deploy/Deploy.CI.nuspec",
-                                                                        "etc/src/Services/Reed.GAC.nuspec"]
-                                                                    nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
+                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
+                                                                    nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${version}"
                                                                 }
 					
 								//****Build Benefits****
                                                                 script {
-                                                                    List nuspecLocations = ["etc/src/Benefits/Web/Reed.Benefits.Web/Reed.Benefits.Web.CI.nuspec",
-                                                                        "etc/src/Benefits/Services/Reed.Benefits.ServiceHost/Reed.Benefits.ServiceHost.CI.nuspec"]
-                                                                    nugetPack nuspecLocations, "${packageLocation}/Benefits", "${version}"
+                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
+                                                                    nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${version}"
                                                                 }
 					
 								//****Build Tools****
                                                                 script {
-                                                                    List nuspecLocations = ["etc/src/Tools/Web/Reed.Tools.Web/Reed.Tools.Web.CI.nuspec",
-                                                                        "etc/src/Tools/Web/Reed.Tools.ServiceHost/Reed.Tools.ServiceHost.CI.nuspec",
-                                                                        "etc/src/Tools/Deployment/Reed.Tools.DeploymentService/Reed.Tools.DeploymentService.CI.nuspec"]
-                                                                    nugetPack nuspecLocations, "${packageLocation}/Tools", "${version}"
+                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
+                                                                    nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${version}"
                                                                 }
 							}
 						}				
