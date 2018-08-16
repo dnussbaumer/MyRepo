@@ -1,1 +1,1 @@
-CCF,"UAT\\AT_CCF.nuspec"
+CCF,UAT\\AT_CCF.nuspec
