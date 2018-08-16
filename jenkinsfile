@@ -79,7 +79,7 @@ pipeline {
                                             def configFilePath = "${WORKSPACE}\\resources\\ccfNuspecConfig.txt"
 //                                            def configText = readFile(configFilePath)
 //                                            echo configText
-                                            nugetPack configFilePath, "${packageLocation}/Platform", "${version}"
+                                            nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${version}"
 //                                            nugetPack nuspecLocations, "${packageLocation}/Platform", "${version}"
                                         }
                                         
