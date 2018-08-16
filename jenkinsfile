@@ -76,12 +76,7 @@ pipeline {
 					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                                         script {
                                             List nuspecLocations = ["UAT\\AT_CCF.nuspec"]
-                                            bat 'if exist artifacts rmdir artifacts /s /q'
-                                            bat 'mkdir artifacts'
-//                                            def batCommand = 
                                             nugetPack nuspecLocations, "${version}"
-//                                            bat batCommand
-//                                            bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"UAT\\AT_CCF.nuspec\" -Version ${version} -OutputDirectory artifacts/ -NoPackageAnalysis"
                                             bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts/AT_CCF.${version}.nupkg"
                                         }
                                         
