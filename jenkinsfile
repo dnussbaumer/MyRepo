@@ -297,27 +297,35 @@ pipeline {
 							dir('PlatDir') {
 								checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /v:diag /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:CodeAnalysisRuleSet=\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\Team Tools\\Static Analysis Tools\\Rule Sets\\MinimumRecommendedRules.ruleset\" /m \"${WORKSPACE}\\PlatDir\\db-branch\\Platform\\Reed.Platform.Db.sln\""
+                                                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Benefits\\BenefitsDB.sln\""
+                                                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Tools\\Tools.sln\""
+//								
+//								bat 'if exist artifacts rmdir artifacts /s /q\n' +
+//								'mkdir artifacts'
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LeaveHubDb/LeaveHubDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LeaveClientDb/LeaveClientDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/ReportDb/ReportDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/DocumentManager/DocumentManager.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/DocumentManagerDirector/DocumentManagerDirector.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/IvrDb/IvrDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LoggingDb/LoggingDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/ValidationCache/ValidationCache.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts\\*.nupkg"
 						
-								bat 'if exist artifacts rmdir artifacts /s /q\n' +
-								'mkdir artifacts'
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LeaveHubDb/LeaveHubDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LeaveClientDb/LeaveClientDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/ReportDb/ReportDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/DocumentManager/DocumentManager.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/DocumentManagerDirector/DocumentManagerDirector.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/IvrDb/IvrDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/LoggingDb/LoggingDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Platform/ValidationCache/ValidationCache.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Platform artifacts\\*.nupkg"
+								
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Benefits/BenefitsHubDb/BenefitsHubDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Benefits/BenefitsClientDb/BenefitsClientDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Benefits artifacts\\Benefits*.nupkg"
 						
-								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Benefits\\BenefitsDB.sln\""
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Benefits/BenefitsHubDb/BenefitsHubDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Benefits/BenefitsClientDb/BenefitsClientDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Benefits artifacts\\Benefits*.nupkg"
-						
-								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Tools\\Tools.sln\""
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Tools/Tools.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Tools artifacts\\Tools*.nupkg"
+								
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"db-branch/Tools/Tools.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Tools artifacts\\Tools*.nupkg"
+                                                                script {
+                                                                    def configFilePath = "etc\\nuspecConfig.txt"
+                                                                    nugetPack "PlatformDb", configFilePath, "${packageLocation}/Platform", "${version}"
+                                                                    nugetPack "BenefitsDb", configFilePath, "${packageLocation}/Benefits", "${version}"
+                                                                    nugetPack "ToolsDb", configFilePath, "${packageLocation}/Tools", "${version}"
+                                                                }
 							}
 						}
 					}
