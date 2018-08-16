@@ -75,7 +75,7 @@ pipeline {
 				dir('ccfDir') {
 					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                                         script {
-                                            def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
+                                            def configFilePath = "${WORKSPACE}\\UAT\\nuspecConfig.txt"
                                             nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${version}"
                                         }
                                         
@@ -277,19 +277,9 @@ pipeline {
 //								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\src\\Services\\Reed.Platform.sln\""
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
                                                                 script {
-                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
+                                                                    def configFilePath = "${WORKSPACE}\\etc\\nuspecConfig.txt"
                                                                     nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${version}"
-                                                                }
-					
-								//****Build Benefits****
-                                                                script {
-                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
                                                                     nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${version}"
-                                                                }
-					
-								//****Build Tools****
-                                                                script {
-                                                                    def configFilePath = "${WORKSPACE}\\resources\\nuspecConfig.txt"
                                                                     nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${version}"
                                                                 }
 							}
