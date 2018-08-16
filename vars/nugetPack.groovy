@@ -1,8 +1,8 @@
-def call(configText, packageLocation, version) {
+def call(configFilePath, packageLocation, version) {
     echo "Entering Method"
     def batCommand = ""
 //    def endingIndex = nuspecLocations.size() - 1
-    
+    def configText = readFile(configFilePath)
     echo configText
 //    bat 'if exist artifacts rmdir artifacts /s /q'
 //    bat 'mkdir artifacts'
