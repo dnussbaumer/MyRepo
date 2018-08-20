@@ -397,12 +397,6 @@ pipeline {
                                 checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Curly/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-curly'])
 
                                 bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\CurlyDir\\Database\\CoreDatabases-branch\\iAM.CoreDatabase.sln\""
-//								bat 'if exist artifacts rmdir artifacts /s /q\n' +
-//									'mkdir artifacts'
-//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveHubDb_Curly/LeaveHubDb_Curly.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveClientDb_Curly/LeaveClientDb_Curly.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/ReportDb_Curly/ReportDb_Curly.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Curly artifacts\\*.nupkg"
                                 script {
                                     def configFilePath = "nuspecConfig.txt"
                                     nugetPack "CurlyDb", configFilePath, "${packageLocation}/Curly", "${version}"
@@ -426,10 +420,14 @@ pipeline {
                         checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Larry/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-larry'])
                         bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\LarryDir\\iAM Build Solution.sln\""
                         bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\LarryDir\\iAM Build Solution.sln\""
-                        bat 'if exist artifacts rmdir artifacts /s /q\n' +\
-                            'mkdir artifacts'
-                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Larry artifacts\\*.nupkg"
+//                        bat 'if exist artifacts rmdir artifacts /s /q\n' +\
+//                            'mkdir artifacts'
+//                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Larry artifacts\\*.nupkg"
+                        script {
+                            def configFilePath = "nuspecConfig.txt"
+                            nugetPack "Larry", configFilePath, "${packageLocation}/Larry", "${version}"
+                        }
                     }
                 }
             }
