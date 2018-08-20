@@ -353,23 +353,27 @@ pipeline {
 								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\SaaSDir\\Configuration\\Configuration.sln\""
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\Configuration\\Configuration.sln\""
 					
-								bat 'if exist artifacts rmdir artifacts /s /q\n' +
-									'mkdir artifacts'
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.Web/iAMWeb/iAMWeb.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.ManualTakeover/MyTakeoverWeb/MyTakeoverWeb.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Configuration/SaaSCustomScripts.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Custom/Reed.SaaS.Pem/Reed.SaaS.Pem.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.Reporting/ReportDefinitions/ReportDefinitions.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Reporting/Reed.ReportDefinitions/Reed.ReportDefinitions.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.SvcHost.Export/Reed.SvcHost.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Svc.Export/Reed.Svc.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Bll.Export/Reed.Bll.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Dal.Export/Reed.Dal.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Export.TimerService/Reed.Export.TimerService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Api.Export/Reed.Api.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/SSIS/SaaS_SSISPackages.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/SaaS artifacts\\*.nupkg"
+//								bat 'if exist artifacts rmdir artifacts /s /q\n' +
+//									'mkdir artifacts'
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.Web/iAMWeb/iAMWeb.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.ManualTakeover/MyTakeoverWeb/MyTakeoverWeb.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Configuration/SaaSCustomScripts.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Custom/Reed.SaaS.Pem/Reed.SaaS.Pem.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/iAM.Reporting/ReportDefinitions/ReportDefinitions.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Reporting/Reed.ReportDefinitions/Reed.ReportDefinitions.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.SvcHost.Export/Reed.SvcHost.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Svc.Export/Reed.Svc.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Bll.Export/Reed.Bll.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Dal.Export/Reed.Dal.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Export.TimerService/Reed.Export.TimerService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Export/Reed.Api.Export/Reed.Api.Export.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/SSIS/SaaS_SSISPackages.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/SaaS artifacts\\*.nupkg"
+                                                                script {
+                                                                    def configFilePath = "nuspecConfig.txt"
+                                                                    nugetPack "SaaS", configFilePath, "${packageLocation}/SaaS", "${version}"
+                                                                }
 							}
 						}
 					}
@@ -386,13 +390,17 @@ pipeline {
 								checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saas'])
 						
 								bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\Database\\CoreDatabases-branch\\iAM.CoreDatabase.sln\""
-								bat 'if exist artifacts rmdir artifacts /s /q\n' +
-								'mkdir artifacts'
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/FeedDb/FeedDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveHubDb_SaaS/LeaveHubDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveClientDb_SaaS/LeaveClientDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/ReportDb_SaaS/ReportDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/SaaS artifacts\\*.nupkg"
+//								bat 'if exist artifacts rmdir artifacts /s /q\n' +
+//								'mkdir artifacts'
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/FeedDb/FeedDb.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveHubDb_SaaS/LeaveHubDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/LeaveClientDb_SaaS/LeaveClientDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Database/CoreDatabases-branch/ReportDb_SaaS/ReportDb_SaaS.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+//								bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/SaaS artifacts\\*.nupkg"
+                                                                script {
+                                                                    def configFilePath = "nuspecConfig.txt"
+                                                                    nugetPack "SaaSDb", configFilePath, "${packageLocation}/SaaS", "${version}"
+                                                                }
 							}
 						}
 					}
@@ -462,25 +470,26 @@ pipeline {
 			}
 		}
 		stage('Larry Build') {
-			when {
-              expression {
-                buildLarrySS == 'true'
-              }
-            }
-			steps {
-				echo 'Building LeavePro Larry Self Service...'
-				dir('LarryDir') {
-					checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Larry/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-larry'])
-					bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\LarryDir\\iAM Build Solution.sln\""
-					bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\LarryDir\\iAM Build Solution.sln\""
-					
-					bat 'if exist artifacts rmdir artifacts /s /q\n' +
-						'mkdir artifacts'
-					bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
-					bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Larry artifacts\\*.nupkg"
-				}
+                    when {
+                        expression {
+                            buildLarrySS == 'true'
+                        }
+                    }
+                    steps {
+                        node('archive01') {
+                            echo 'Building LeavePro Larry Self Service...'
+                            dir('LarryDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Larry/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-larry'])
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\LarryDir\\iAM Build Solution.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\LarryDir\\iAM Build Solution.sln\""
+				bat 'if exist artifacts rmdir artifacts /s /q\n' +\
+                                    'mkdir artifacts'
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" pack \"Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.CI.nuspec\" -Version 3.1.${BUILD_NUMBER}.0 -OutputDirectory artifacts/ -NoPackageAnalysis"
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" push -source ${packageLocation}/Larry artifacts\\*.nupkg"
+                            }
 			}
-		}
+                    }
+                }
 		
 		
 		stage('NXT Build') {
