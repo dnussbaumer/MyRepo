@@ -1,3 +1,4 @@
+@NonCPS
 def call(project, configFilePath, file) {
     echo 'Entering method call'
     echo "project = ${project}"
