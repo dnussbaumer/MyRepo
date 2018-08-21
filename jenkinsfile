@@ -61,7 +61,8 @@ pipeline {
 //                                    ]
 //                                    packCCF = findChanges configList, file
                                     dir('ccfDir') {
-                                        packCCF = newFindChanges "CCF", "UAT\\pollingConfig.txt", file
+                                        def configFilePath = "UAT\\pollingConfig.txt"
+                                        packCCF = newFindChanges "CCF", configFilePath, file
                                     }
 //                                    configList = [
 //                                        [
