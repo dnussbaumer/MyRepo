@@ -1,0 +1,3 @@
+Platform,-BuildHub ,Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas
+Platform,-BuildClient ,Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas
+Platform,-BuildReport ,Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas
