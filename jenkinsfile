@@ -60,10 +60,9 @@ pipeline {
 //                                        ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
 //                                    ]
 //                                    packCCF = findChanges configList, file
-                                    dir('ccfDir') {
-                                        def configFilePath = "UAT\\pollingConfig.txt"
-                                        packCCF = newFindChanges "CCF", configFilePath, file
-                                    }
+                                    def configFilePath = "ccfDir\\UAT\\pollingConfig.txt"
+                                    packCCF = newFindChanges "CCF", configFilePath, file
+                                    echo "Done checking CCF - packCCF = ${packCCF}"
 //                                    configList = [
 //                                        [
 //                                            ["Platform",buildPlatform,["\$/Gold/Platform/AT/etc/src/Services"]],
@@ -78,10 +77,12 @@ pipeline {
 //                                    ]
 //                                    buildPlatform = findChanges configList[0], file
 //                                    buildPlatformDb = findChanges configList[1], file
-                                    dir('PlatDir') {
-                                        buildPlatform = newFindChanges "Platform", "etc\\pollingConfig.txt", file
-                                        buildPlatformDb = newFindChanges "PlatformDb", "etc\\pollingConfig.txt", file
-                                    }
+                                    configFilePath = "PlatDir\\etc\\pollingConfig.txt"
+                                    echo 'Checking Platform'
+                                    buildPlatform = newFindChanges "Platform", configFilePath, file
+                                    echo "Done checking Platform - buildPlatform = ${buildPlatform}"
+                                    buildPlatformDb = newFindChanges "PlatformDb", configFilePath, file
+                                    echo "Done checking Platform DB - buildPlatformDb = ${buildPlatformDb}"
                                     configList = [
                                         [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
                                         [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
