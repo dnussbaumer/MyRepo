@@ -1,10 +1,10 @@
 @NonCPS
-def call(project, configFilePath, file) {
+def call(project, configFileText, file) {
     echo 'Entering method call'
     echo "project = ${project}"
     echo "file = ${file.path.toString()}"
-    echo "Attempting to read file ${configFilePath}"
-    def configText = readFile(configFilePath)
+    echo 'configFileText:'
+    echo configFileText
 //    def configText = "CCF,\$/Support/Central Configuration Files/BAT\n" +
 //                    "CCF,\$/Support/Central Configuration Files/SIT\n" +
 //                    "CCF,\$/Support/Central Configuration Files/Stage/Reed Services\n" +

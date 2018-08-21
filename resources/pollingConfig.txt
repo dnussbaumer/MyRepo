@@ -1,0 +1,12 @@
+CCF,Support/Central Configuration Files/BAT
+CCF,Support/Central Configuration Files/SIT
+CCF,Support/Central Configuration Files/Stage/Reed Services
+CCF,Support/Central Configuration Files/Stage/SaaS
+CCF,Support/Central Configuration Files/Stage/Canada
+CCF,Support/Central Configuration Files/UAT/Curly
+Platform,Gold/Platform/AT/etc/src/Services
+Platform,Gold/Platform/AT/etc/src/Benefits
+Platform,Gold/Platform/AT/etc/src/Tools
+PlatformDb,Gold/Platform/AT/db-branch/Platform
+PlatformDb,Gold/Platform/AT/db-branch/Beneftis
+PlatformDb,Gold/Platform/AT/db-branch/Tools

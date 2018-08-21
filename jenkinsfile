@@ -47,6 +47,8 @@ pipeline {
                     List dbConfigList = []
                     List dbResultList = []
                     changeLines = ''
+                    def configFilePath = "resources\\pollingConfig.txt"
+                    def configFileText = readFile(configFilePath)
                     //while(build != null && build.result != 'SUCCESS') {
                     while(build != null) {
                         for (changeLog in build.changeSets) {
@@ -60,8 +62,8 @@ pipeline {
 //                                        ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
 //                                    ]
 //                                    packCCF = findChanges configList, file
-                                    def configFilePath = "ccfDir\\UAT\\pollingConfig.txt"
-                                    packCCF = newFindChanges "CCF", configFilePath, file
+                                    
+                                    packCCF = newFindChanges "CCF", configFileText, file
                                     echo "Done checking CCF - packCCF = ${packCCF}"
 //                                    configList = [
 //                                        [
@@ -77,11 +79,10 @@ pipeline {
 //                                    ]
 //                                    buildPlatform = findChanges configList[0], file
 //                                    buildPlatformDb = findChanges configList[1], file
-                                    configFilePath = "PlatDir\\etc\\pollingConfig.txt"
                                     echo 'Checking Platform'
-                                    buildPlatform = newFindChanges "Platform", configFilePath, file
+                                    buildPlatform = newFindChanges "Platform", configFileText, file
                                     echo "Done checking Platform - buildPlatform = ${buildPlatform}"
-                                    buildPlatformDb = newFindChanges "PlatformDb", configFilePath, file
+                                    buildPlatformDb = newFindChanges "PlatformDb", configFileText, file
                                     echo "Done checking Platform DB - buildPlatformDb = ${buildPlatformDb}"
                                     configList = [
                                         [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
