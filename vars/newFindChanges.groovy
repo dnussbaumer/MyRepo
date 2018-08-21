@@ -3,7 +3,7 @@ def call(project, configFilePath, file) {
     echo "project = ${project}"
     echo "file = ${file.path.toString()}"
     echo "Attempting to read file ${configFilePath}"
-//    def configText = readFile(configFilePath)
+    def configText = readFile(configFilePath)
 //    def configText = "CCF,\$/Support/Central Configuration Files/BAT\n" +
 //                    "CCF,\$/Support/Central Configuration Files/SIT\n" +
 //                    "CCF,\$/Support/Central Configuration Files/Stage/Reed Services\n" +
