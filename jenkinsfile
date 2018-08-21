@@ -62,9 +62,10 @@ pipeline {
 //                                        ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
 //                                    ]
 //                                    packCCF = findChanges configList, file
-                                    
-                                    packCCF = newFindChanges "CCF", configFileText, file
-                                    echo "Done checking CCF - packCCF = ${packCCF}"
+                                    if (packCCF == 'false') {
+                                        packCCF = newFindChanges "CCF", configFileText, file
+                                        echo "Done checking CCF - packCCF = ${packCCF}"
+                                    }
 //                                    configList = [
 //                                        [
 //                                            ["Platform",buildPlatform,["\$/Gold/Platform/AT/etc/src/Services"]],
@@ -79,32 +80,55 @@ pipeline {
 //                                    ]
 //                                    buildPlatform = findChanges configList[0], file
 //                                    buildPlatformDb = findChanges configList[1], file
-                                    echo 'Checking Platform'
-                                    buildPlatform = newFindChanges "Platform", configFileText, file
-                                    echo "Done checking Platform - buildPlatform = ${buildPlatform}"
-                                    buildPlatformDb = newFindChanges "PlatformDb", configFileText, file
-                                    echo "Done checking Platform DB - buildPlatformDb = ${buildPlatformDb}"
-                                    configList = [
-                                        [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
-                                        [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
-                                        [["SaaSDB",buildSaaSDb,["\$/SaaS/AT/Database/CoreDatabases-branch"]]]
-                                    ]
-                                    buildSaaS = findChanges configList[0], file
-                                    deploySaaSSSRS = findChanges configList[1], file
-                                    buildSaaSDb = findChanges configList[2], file
-                                    configList = [
-                                        [["Curly",buildCurly,["\$/Curly/AT/Source Code","\$/Curly/AT/Configuration/CustomScripts"]]],
-                                        [["CurlySSRS",deployCurlySSRS,["\$/Curly/AT/Source Code/iAM.Reporting","\$/Curly/AT/Source Code/Reed.Reporting"]]],
-                                        [["CurlyDB",buildCurlyDb,["\$/Curly/AT/Database/CoreDatabases-branch"]]]
-                                    ]
-                                    buildCurly = findChanges configList[0], file
-                                    deployCurlySSRS = findChanges configList[1], file
-                                    buildCurlyDb = findChanges configList[2], file
-                                    configList = [
-                                        ["Larry",buildLarrySS,["\$/Larry/AT/Source Code/Reed.Web.SelfService"]]
-                                    ]
-                                    buildLarrySS = findChanges configList, file
-                                    
+                                    if (buildPlatform == 'false') {
+                                        buildPlatform = newFindChanges "Platform", configFileText, file
+                                        echo "Done checking Platform - buildPlatform = ${buildPlatform}"
+                                    }
+                                    if (buildPlatformDb == 'false') {
+                                        buildPlatformDb = newFindChanges "PlatformDb", configFileText, file
+                                        echo "Done checking Platform DB - buildPlatformDb = ${buildPlatformDb}"
+                                    }
+//                                    configList = [
+//                                        [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
+//                                        [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
+//                                        [["SaaSDB",buildSaaSDb,["\$/SaaS/AT/Database/CoreDatabases-branch"]]]
+//                                    ]
+                                    if (buildSaaS == 'false') {
+                                        buildSaaS = newFindChanges "SaaS", configFileText, file
+                                        echo "Done checking SaaS - buildSaaS = ${buildSaaS}"
+                                    }
+                                    if (deploySaaSSSRS == 'false') {
+                                        deploySaaSSSRS = newFindChanges "SaaSSSRS", configFileText, file
+                                        echo "Done checking SaaS SSRS - deploySaaSSSRS = ${deploySaaSSSRS}"
+                                    }
+                                    if (buildSaaSDb == 'false') {
+                                        buildSaaSDb = newFindChanges "SaaSDB", configFileText, file
+                                        echo "Done checking SaaS DB - buildSaaSDb = ${buildSaaSDb}"
+                                    }
+//                                    configList = [
+//                                        [["Curly",buildCurly,["\$/Curly/AT/Source Code","\$/Curly/AT/Configuration/CustomScripts"]]],
+//                                        [["CurlySSRS",deployCurlySSRS,["\$/Curly/AT/Source Code/iAM.Reporting","\$/Curly/AT/Source Code/Reed.Reporting"]]],
+//                                        [["CurlyDB",buildCurlyDb,["\$/Curly/AT/Database/CoreDatabases-branch"]]]
+//                                    ]
+                                    if (buildCurly == 'false') {
+                                        buildCurly = newFindChanges "Curly", configFileText, file
+                                        echo "Done checking Curly - buildCurly = ${buildCurly}"
+                                    }
+                                    if (deployCurlySSRS == 'false') {
+                                        deployCurlySSRS = newFindChanges "CurlySSRS", configFileText, file
+                                        echo "Done checking Curly SSRS - deployCurlySSRS = ${deployCurlySSRS}"
+                                    }
+                                    if (buildCurlyDb == 'false') {
+                                        buildCurlyDb = newFindChanges "CurlyDB", configFileText, file
+                                        echo "Done checking Curly DB - buildCurlyDb = ${buildCurlyDb}"
+                                    }
+//                                    configList = [
+//                                        ["Larry",buildLarrySS,["\$/Larry/AT/Source Code/Reed.Web.SelfService"]]
+//                                    ]
+                                    if (buildLarrySS == 'false') {
+                                        buildLarrySS = newFindChanges "Larry", configFileText, file
+                                        echo "Done checking Larry - buildLarrySS = ${buildLarrySS}"
+                                    }
                                     dbConfigList = [
                                         ["Platform",buildStgPlatform,"-BuildHub ",["\$/Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas"]],
                                         ["Platform",buildStgPlatform,"-BuildClient ",["\$/Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas"]],

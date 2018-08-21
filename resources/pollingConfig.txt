@@ -10,3 +10,14 @@ Platform,Gold/Platform/AT/etc/src/Tools
 PlatformDb,Gold/Platform/AT/db-branch/Platform
 PlatformDb,Gold/Platform/AT/db-branch/Beneftis
 PlatformDb,Gold/Platform/AT/db-branch/Tools
+SaaS,SaaS/AT/Source Code
+SaaS,SaaS/AT/Configuration/CustomScripts
+SaaSSSRS,SaaS/AT/Source Code/iAM.Reporting
+SaaSSSRS,SaaS/AT/Source Code/Reed.Reporting
+SaaSDB,SaaS/AT/Database/CoreDatabases-branch
+Curly,Curly/AT/Source Code
+Curly,Curly/AT/Configuration/CustomScripts
+CurlySSRS,Curly/AT/Source Code/iAM.Reporting
+CurlySSRS,Curly/AT/Source Code/Reed.Reporting
+CurlyDB,Curly/AT/Database/CoreDatabases-branch
+Larry,Larry/AT/Source Code/Reed.Web.SelfService
