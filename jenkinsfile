@@ -131,31 +131,31 @@ pipeline {
                                         if (buildLarrySS == 'false') {
                                             buildLarrySS = findChanges "Larry", configFileText, file
                                         }
-                                        dbResultList = newFindDbChanges "Platform",configFileTextDb, file
+                                        dbResultList = findDbChanges "Platform",configFileTextDb, file
                                         buildStgPlatform = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbResultList = newFindDbChanges "Benefits",configFileTextDb, file
+                                        dbResultList = findDbChanges "Benefits",configFileTextDb, file
                                         buildStgBenefits = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbResultList = newFindDbChanges "Tools",configFileTextDb, file
+                                        dbResultList = findDbChanges "Tools",configFileTextDb, file
                                         buildStgTools = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbResultList = newFindDbChanges "SaaS",configFileTextDb, file
+                                        dbResultList = findDbChanges "SaaS",configFileTextDb, file
                                         buildStgSaaS = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbResultList = newFindDbChanges "Curly",configFileTextDb, file
+                                        dbResultList = findDbChanges "Curly",configFileTextDb, file
                                         buildStgCurly = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){
