@@ -91,54 +91,31 @@ pipeline {
                                         if (buildLarrySS == 'false') {
                                             buildLarrySS = findChanges "Larry", configFileText, file
                                         }
-//                                        dbConfigList = [
-//                                            ["Platform",buildStgPlatform,"-BuildHub ",["\$/Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas"]],
-//                                            ["Platform",buildStgPlatform,"-BuildClient ",["\$/Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas"]],
-//                                            ["Platform",buildStgPlatform,"-BuildReport ",["\$/Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas"]]
-//                                        ]
                                         dbResultList = newFindDbChanges "Platform",configFileTextDb, file
                                         buildStgPlatform = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-
-                                        dbConfigList = [    
-                                            ["Benefits",buildStgBenefits,"-BuildHub ",["\$/Gold/Platform/AT/db/Benefits/BenefitsHubDb/Schema Objects/Schemas"]],
-                                            ["Benefits",buildStgBenefits,"-BuildClient ",["\$/Gold/Platform/AT/db/Benefits/BenefitsClientDb/Schema Objects/Schemas"]]
-                                        ]
-                                        dbResultList = findDbChanges dbConfigList, file
+                                        dbResultList = newFindDbChanges "Benefits",configFileTextDb, file
                                         buildStgBenefits = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbConfigList = [    
-                                            ["Tools",buildStgTools,"Tools",["\$/Gold/Platform/AT/db/Tools/Schema Objects"]]
-                                        ]
-                                        dbResultList = findDbChanges dbConfigList, file
+                                        dbResultList = newFindDbChanges "Tools",configFileTextDb, file
                                         buildStgTools = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbConfigList = [    
-                                            ["SaaS",buildStgSaaS,"-BuildHub ",["\$/SaaS/AT/Database/CoreDatabases/LeaveHubDb_SaaS/Schema Objects/Schemas"]],
-                                            ["SaaS",buildStgSaaS,"-BuildClient ",["\$/SaaS/AT/Database/CoreDatabases/LeaveClientDb_SaaS/Schema Objects/Schemas"]],
-                                            ["SaaS",buildStgSaaS,"-BuildReport ",["\$/SaaS/AT/Database/CoreDatabases/ReportDb_SaaS/Schema Objects/Schemas"]]
-                                        ]
-                                        dbResultList = findDbChanges dbConfigList, file
+                                        dbResultList = newFindDbChanges "SaaS",configFileTextDb, file
                                         buildStgSaaS = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
                                             changeLines = addChanges changeLines, optionLines
                                         }
-                                        dbConfigList = [    
-                                            ["Curly",buildStgCurly,"-BuildHub ",["\$/Curly/AT/Database/CoreDatabases/LeaveHubDb_Curly/Schema Objects/Schemas"]],
-                                            ["Curly",buildStgCurly,"-BuildClient ",["\$/Curly/AT/Database/CoreDatabases/LeaveClientDb_Curly/Schema Objects/Schemas"]],
-                                            ["Curly",buildStgCurly,"-BuildReport ",["\$/Curly/AT/Database/CoreDatabases/ReportDb_Curly/Schema Objects/Schemas"]]
-                                        ]
-                                        dbResultList = findDbChanges dbConfigList, file
+                                        dbResultList = newFindDbChanges "Curly",configFileTextDb, file
                                         buildStgCurly = dbResultList[0]
                                         optionLine = dbResultList[1]
                                         if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){

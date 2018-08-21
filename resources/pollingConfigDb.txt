@@ -1,3 +1,12 @@
 Platform,-BuildHub ,Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas
 Platform,-BuildClient ,Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas
 Platform,-BuildReport ,Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas
+Benefits,-BuildHub ,Gold/Platform/AT/db/Benefits/BenefitsHubDb/Schema Objects/Schemas
+Benefits,-BuildClient ,Gold/Platform/AT/db/Benefits/BenefitsClientDb/Schema Objects/Schemas
+Tools,Tools,Gold/Platform/AT/db/Tools/Schema Objects
+SaaS,-BuildHub ,SaaS/AT/Database/CoreDatabases/LeaveHubDb_SaaS/Schema Objects/Schemas
+SaaS,-BuildClient ,SaaS/AT/Database/CoreDatabases/LeaveClientDb_SaaS/Schema Objects/Schemas
+SaaS,-BuildReport ,SaaS/AT/Database/CoreDatabases/ReportDb_SaaS/Schema Objects/Schemas
+Curly,-BuildHub ,Curly/AT/Database/CoreDatabases/LeaveHubDb_Curly/Schema Objects/Schemas
+Curly,-BuildClient ,Curly/AT/Database/CoreDatabases/LeaveClientDb_Curly/Schema Objects/Schemas
+Curly,-BuildReport ,Curly/AT/Database/CoreDatabases/ReportDb_Curly/Schema Objects/Schemas
