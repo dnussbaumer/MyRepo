@@ -57,130 +57,122 @@ pipeline {
                                 echo "${entry.commitId} by ${entry.author} on ${entry.date}: ${entry.msg}"
                                 echo 'Files Affected...'
                                 for(file in entry.affectedFiles) {
-                                    echo file.path.toString()
-//                                    configList = [
-//                                        ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
-//                                    ]
-//                                    packCCF = findChanges configList, file
-                                    if (packCCF == 'false') {
-                                        packCCF = newFindChanges "CCF", configFileText, file
-                                        echo "Done checking CCF - packCCF = ${packCCF}"
-                                    }
-//                                    configList = [
-//                                        [
-//                                            ["Platform",buildPlatform,["\$/Gold/Platform/AT/etc/src/Services"]],
-//                                            ["Benefits",buildPlatform,["\$/Gold/Platform/AT/etc/src/Benefits"]],
-//                                            ["Tools",buildPlatform,["\$/Gold/Platform/AT/etc/src/Tools"]]
-//                                        ],
-//                                        [
-//                                            ["PlatformDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Platform"]],
-//                                            ["BenefitsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Beneftis"]],
-//                                            ["ToolsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Tools"]]
-//                                        ]
-//                                    ]
-//                                    buildPlatform = findChanges configList[0], file
-//                                    buildPlatformDb = findChanges configList[1], file
-                                    if (buildPlatform == 'false') {
-                                        buildPlatform = newFindChanges "Platform", configFileText, file
-                                        echo "Done checking Platform - buildPlatform = ${buildPlatform}"
-                                    }
-                                    if (buildPlatformDb == 'false') {
-                                        buildPlatformDb = newFindChanges "PlatformDb", configFileText, file
-                                        echo "Done checking Platform DB - buildPlatformDb = ${buildPlatformDb}"
-                                    }
-//                                    configList = [
-//                                        [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
-//                                        [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
-//                                        [["SaaSDB",buildSaaSDb,["\$/SaaS/AT/Database/CoreDatabases-branch"]]]
-//                                    ]
-                                    if (buildSaaS == 'false') {
-                                        buildSaaS = newFindChanges "SaaS", configFileText, file
-                                        echo "Done checking SaaS - buildSaaS = ${buildSaaS}"
-                                    }
-                                    if (deploySaaSSSRS == 'false') {
-                                        deploySaaSSSRS = newFindChanges "SaaSSSRS", configFileText, file
-                                        echo "Done checking SaaS SSRS - deploySaaSSSRS = ${deploySaaSSSRS}"
-                                    }
-                                    if (buildSaaSDb == 'false') {
-                                        buildSaaSDb = newFindChanges "SaaSDB", configFileText, file
-                                        echo "Done checking SaaS DB - buildSaaSDb = ${buildSaaSDb}"
-                                    }
-//                                    configList = [
-//                                        [["Curly",buildCurly,["\$/Curly/AT/Source Code","\$/Curly/AT/Configuration/CustomScripts"]]],
-//                                        [["CurlySSRS",deployCurlySSRS,["\$/Curly/AT/Source Code/iAM.Reporting","\$/Curly/AT/Source Code/Reed.Reporting"]]],
-//                                        [["CurlyDB",buildCurlyDb,["\$/Curly/AT/Database/CoreDatabases-branch"]]]
-//                                    ]
-                                    if (buildCurly == 'false') {
-                                        buildCurly = newFindChanges "Curly", configFileText, file
-                                        echo "Done checking Curly - buildCurly = ${buildCurly}"
-                                    }
-                                    if (deployCurlySSRS == 'false') {
-                                        deployCurlySSRS = newFindChanges "CurlySSRS", configFileText, file
-                                        echo "Done checking Curly SSRS - deployCurlySSRS = ${deployCurlySSRS}"
-                                    }
-                                    if (buildCurlyDb == 'false') {
-                                        buildCurlyDb = newFindChanges "CurlyDB", configFileText, file
-                                        echo "Done checking Curly DB - buildCurlyDb = ${buildCurlyDb}"
-                                    }
-//                                    configList = [
-//                                        ["Larry",buildLarrySS,["\$/Larry/AT/Source Code/Reed.Web.SelfService"]]
-//                                    ]
-                                    if (buildLarrySS == 'false') {
-                                        buildLarrySS = newFindChanges "Larry", configFileText, file
-                                        echo "Done checking Larry - buildLarrySS = ${buildLarrySS}"
-                                    }
-                                    dbConfigList = [
-                                        ["Platform",buildStgPlatform,"-BuildHub ",["\$/Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas"]],
-                                        ["Platform",buildStgPlatform,"-BuildClient ",["\$/Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas"]],
-                                        ["Platform",buildStgPlatform,"-BuildReport ",["\$/Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas"]]
-                                    ]
-                                    dbResultList = findDbChanges dbConfigList, file
-                                    buildStgPlatform = dbResultList[0]
-                                    optionLine = dbResultList[1]
-                                    if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
-                                        changeLines = addChanges changeLines, optionLines
-                                    }
-                                    
-                                    dbConfigList = [    
-                                        ["Benefits",buildStgBenefits,"-BuildHub ",["\$/Gold/Platform/AT/db/Benefits/BenefitsHubDb/Schema Objects/Schemas"]],
-                                        ["Benefits",buildStgBenefits,"-BuildClient ",["\$/Gold/Platform/AT/db/Benefits/BenefitsClientDb/Schema Objects/Schemas"]]
-                                    ]
-                                    dbResultList = findDbChanges dbConfigList, file
-                                    buildStgBenefits = dbResultList[0]
-                                    optionLine = dbResultList[1]
-                                    if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
-                                        changeLines = addChanges changeLines, optionLines
-                                    }
-                                    dbConfigList = [    
-                                        ["Tools",buildStgTools,"Tools",["\$/Gold/Platform/AT/db/Tools/Schema Objects"]]
-                                    ]
-                                    dbResultList = findDbChanges dbConfigList, file
-                                    buildStgTools = dbResultList[0]
-                                    optionLine = dbResultList[1]
-                                    if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
-                                        changeLines = addChanges changeLines, optionLines
-                                    }
-                                    dbConfigList = [    
-                                        ["SaaS",buildStgSaaS,"-BuildHub ",["\$/SaaS/AT/Database/CoreDatabases/LeaveHubDb_SaaS/Schema Objects/Schemas"]],
-                                        ["SaaS",buildStgSaaS,"-BuildClient ",["\$/SaaS/AT/Database/CoreDatabases/LeaveClientDb_SaaS/Schema Objects/Schemas"]],
-                                        ["SaaS",buildStgSaaS,"-BuildReport ",["\$/SaaS/AT/Database/CoreDatabases/ReportDb_SaaS/Schema Objects/Schemas"]]
-                                    ]
-                                    dbResultList = findDbChanges dbConfigList, file
-                                    buildStgSaaS = dbResultList[0]
-                                    optionLine = dbResultList[1]
-                                    if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
-                                        changeLines = addChanges changeLines, optionLines
-                                    }
-                                    dbConfigList = [    
-                                        ["Curly",buildStgCurly,"-BuildHub ",["\$/Curly/AT/Database/CoreDatabases/LeaveHubDb_Curly/Schema Objects/Schemas"]],
-                                        ["Curly",buildStgCurly,"-BuildClient ",["\$/Curly/AT/Database/CoreDatabases/LeaveClientDb_Curly/Schema Objects/Schemas"]],
-                                        ["Curly",buildStgCurly,"-BuildReport ",["\$/Curly/AT/Database/CoreDatabases/ReportDb_Curly/Schema Objects/Schemas"]]
-                                    ]
-                                    dbResultList = findDbChanges dbConfigList, file
-                                    buildStgCurly = dbResultList[0]
-                                    optionLine = dbResultList[1]
-                                    if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){
-                                        changeLines = addChanges changeLines, optionLines
+                                    if (file.path.contains('Support/Central Configuration Files') || file.path.contains('Gold/Platform/AT') || file.path.contains('SaaS/AT') || file.path.contains('Curly/AT') || file.path.contains('Larry/AT')) {
+                                        echo file.path.toString()
+    //                                    configList = [
+    //                                        ["CCF",packCCF,["\$/Support/Central Configuration Files/BAT","\$/Support/Central Configuration Files/SIT","\$/Support/Central Configuration Files/Stage/Reed Services","\$/Support/Central Configuration Files/Stage/SaaS","\$/Support/Central Configuration Files/Stage/Canada","\$/Support/Central Configuration Files/UAT/Curly"]]
+    //                                    ]
+    //                                    packCCF = findChanges configList, file
+                                        if (packCCF == 'false') {
+                                            packCCF = newFindChanges "CCF", configFileText, file
+                                        }
+    //                                    configList = [
+    //                                        [
+    //                                            ["Platform",buildPlatform,["\$/Gold/Platform/AT/etc/src/Services"]],
+    //                                            ["Benefits",buildPlatform,["\$/Gold/Platform/AT/etc/src/Benefits"]],
+    //                                            ["Tools",buildPlatform,["\$/Gold/Platform/AT/etc/src/Tools"]]
+    //                                        ],
+    //                                        [
+    //                                            ["PlatformDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Platform"]],
+    //                                            ["BenefitsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Beneftis"]],
+    //                                            ["ToolsDB",buildPlatformDb,["\$/Gold/Platform/AT/db-branch/Tools"]]
+    //                                        ]
+    //                                    ]
+    //                                    buildPlatform = findChanges configList[0], file
+    //                                    buildPlatformDb = findChanges configList[1], file
+                                        if (buildPlatform == 'false') {
+                                            buildPlatform = newFindChanges "Platform", configFileText, file
+                                        }
+                                        if (buildPlatformDb == 'false') {
+                                            buildPlatformDb = newFindChanges "PlatformDb", configFileText, file
+                                        }
+    //                                    configList = [
+    //                                        [["SaaS",buildSaaS,["\$/SaaS/AT/Source Code","\$/SaaS/AT/Configuration/CustomScripts"]]],
+    //                                        [["SaaSSSRS",deploySaaSSSRS,["\$/SaaS/AT/Source Code/iAM.Reporting","\$/SaaS/AT/Source Code/Reed.Reporting"]]],
+    //                                        [["SaaSDB",buildSaaSDb,["\$/SaaS/AT/Database/CoreDatabases-branch"]]]
+    //                                    ]
+                                        if (buildSaaS == 'false') {
+                                            buildSaaS = newFindChanges "SaaS", configFileText, file
+                                        }
+                                        if (deploySaaSSSRS == 'false') {
+                                            deploySaaSSSRS = newFindChanges "SaaSSSRS", configFileText, file
+                                        }
+                                        if (buildSaaSDb == 'false') {
+                                            buildSaaSDb = newFindChanges "SaaSDB", configFileText, file
+                                        }
+    //                                    configList = [
+    //                                        [["Curly",buildCurly,["\$/Curly/AT/Source Code","\$/Curly/AT/Configuration/CustomScripts"]]],
+    //                                        [["CurlySSRS",deployCurlySSRS,["\$/Curly/AT/Source Code/iAM.Reporting","\$/Curly/AT/Source Code/Reed.Reporting"]]],
+    //                                        [["CurlyDB",buildCurlyDb,["\$/Curly/AT/Database/CoreDatabases-branch"]]]
+    //                                    ]
+                                        if (buildCurly == 'false') {
+                                            buildCurly = newFindChanges "Curly", configFileText, file
+                                        }
+                                        if (deployCurlySSRS == 'false') {
+                                            deployCurlySSRS = newFindChanges "CurlySSRS", configFileText, file
+                                        }
+                                        if (buildCurlyDb == 'false') {
+                                            buildCurlyDb = newFindChanges "CurlyDB", configFileText, file
+                                        }
+    //                                    configList = [
+    //                                        ["Larry",buildLarrySS,["\$/Larry/AT/Source Code/Reed.Web.SelfService"]]
+    //                                    ]
+                                        if (buildLarrySS == 'false') {
+                                            buildLarrySS = newFindChanges "Larry", configFileText, file
+                                        }
+                                        dbConfigList = [
+                                            ["Platform",buildStgPlatform,"-BuildHub ",["\$/Gold/Platform/AT/db/Platform/LeaveHubDb/Schema Objects/Schemas"]],
+                                            ["Platform",buildStgPlatform,"-BuildClient ",["\$/Gold/Platform/AT/db/Platform/LeaveClientDb/Schema Objects/Schemas"]],
+                                            ["Platform",buildStgPlatform,"-BuildReport ",["\$/Gold/Platform/AT/db/Platform/ReportDb/Schema Objects/Schemas"]]
+                                        ]
+                                        dbResultList = findDbChanges dbConfigList, file
+                                        buildStgPlatform = dbResultList[0]
+                                        optionLine = dbResultList[1]
+                                        if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
+                                            changeLines = addChanges changeLines, optionLines
+                                        }
+
+                                        dbConfigList = [    
+                                            ["Benefits",buildStgBenefits,"-BuildHub ",["\$/Gold/Platform/AT/db/Benefits/BenefitsHubDb/Schema Objects/Schemas"]],
+                                            ["Benefits",buildStgBenefits,"-BuildClient ",["\$/Gold/Platform/AT/db/Benefits/BenefitsClientDb/Schema Objects/Schemas"]]
+                                        ]
+                                        dbResultList = findDbChanges dbConfigList, file
+                                        buildStgBenefits = dbResultList[0]
+                                        optionLine = dbResultList[1]
+                                        if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
+                                            changeLines = addChanges changeLines, optionLines
+                                        }
+                                        dbConfigList = [    
+                                            ["Tools",buildStgTools,"Tools",["\$/Gold/Platform/AT/db/Tools/Schema Objects"]]
+                                        ]
+                                        dbResultList = findDbChanges dbConfigList, file
+                                        buildStgTools = dbResultList[0]
+                                        optionLine = dbResultList[1]
+                                        if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
+                                            changeLines = addChanges changeLines, optionLines
+                                        }
+                                        dbConfigList = [    
+                                            ["SaaS",buildStgSaaS,"-BuildHub ",["\$/SaaS/AT/Database/CoreDatabases/LeaveHubDb_SaaS/Schema Objects/Schemas"]],
+                                            ["SaaS",buildStgSaaS,"-BuildClient ",["\$/SaaS/AT/Database/CoreDatabases/LeaveClientDb_SaaS/Schema Objects/Schemas"]],
+                                            ["SaaS",buildStgSaaS,"-BuildReport ",["\$/SaaS/AT/Database/CoreDatabases/ReportDb_SaaS/Schema Objects/Schemas"]]
+                                        ]
+                                        dbResultList = findDbChanges dbConfigList, file
+                                        buildStgSaaS = dbResultList[0]
+                                        optionLine = dbResultList[1]
+                                        if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
+                                            changeLines = addChanges changeLines, optionLines
+                                        }
+                                        dbConfigList = [    
+                                            ["Curly",buildStgCurly,"-BuildHub ",["\$/Curly/AT/Database/CoreDatabases/LeaveHubDb_Curly/Schema Objects/Schemas"]],
+                                            ["Curly",buildStgCurly,"-BuildClient ",["\$/Curly/AT/Database/CoreDatabases/LeaveClientDb_Curly/Schema Objects/Schemas"]],
+                                            ["Curly",buildStgCurly,"-BuildReport ",["\$/Curly/AT/Database/CoreDatabases/ReportDb_Curly/Schema Objects/Schemas"]]
+                                        ]
+                                        dbResultList = findDbChanges dbConfigList, file
+                                        buildStgCurly = dbResultList[0]
+                                        optionLine = dbResultList[1]
+                                        if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){
+                                            changeLines = addChanges changeLines, optionLines
+                                        }
                                     }
                                 }
                             }
