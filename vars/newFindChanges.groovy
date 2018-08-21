@@ -1,5 +1,6 @@
 def call(project, configFilePath, file) {
     echo 'Entering method call'
+    echo "Attempting to read file ${configFilePath}"
     def configText = readFile(configFilePath)
     echo 'file read'
     def configLines = configText.split('\n')
