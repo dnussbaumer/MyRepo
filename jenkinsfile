@@ -1,27 +1,67 @@
 @Library('MyRepo')_
 
 pipeline {
+    //agent { label 'archive01' }
+    //agent { label 'build01' }
     agent any
+    parameters {
+        booleanParam(defaultValue: false, description: '', name: 'PackCCF')
+        booleanParam(defaultValue: false, description: '', name: 'BuildPlatform')
+        booleanParam(defaultValue: false, description: '', name: 'BuildPlatformDb')
+        booleanParam(defaultValue: false, description: '', name: 'BuildSaaS')
+        booleanParam(defaultValue: false, description: '', name: 'BuildSaaSDb')
+        booleanParam(defaultValue: false, description: '', name: 'BuildCurly')
+        booleanParam(defaultValue: false, description: '', name: 'BuildCurlyDb')
+        booleanParam(defaultValue: false, description: '', name: 'BuildLarrySS')
+        booleanParam(defaultValue: false, description: '', name: 'BuildNxt')
+        booleanParam(defaultValue: false, description: '', name: 'BuildStgPlatform')
+        booleanParam(defaultValue: false, description: '', name: 'BuildStgBenefits')
+        booleanParam(defaultValue: false, description: '', name: 'BuildStgTools')
+        booleanParam(defaultValue: false, description: '', name: 'BuildStgSaaS')
+        booleanParam(defaultValue: false, description: '', name: 'BuildStgCurly')
+        booleanParam(defaultValue: false, description: '', name: 'RunAutoChangePS')
+
+        booleanParam(defaultValue: false, description: '', name: 'DeployRS')
+        booleanParam(defaultValue: false, description: '', name: 'DeploySaaS')
+        booleanParam(defaultValue: false, description: '', name: 'DeployCurly')
+        booleanParam(defaultValue: false, description: '', name: 'DeployLarryAT')
+        booleanParam(defaultValue: false, description: '', name: 'DeployLarryBAT')
+        booleanParam(defaultValue: false, description: '', name: 'DeployCan')
+        booleanParam(defaultValue: false, description: '', name: 'DeployNxt')
+        booleanParam(defaultValue: false, description: '', name: 'DeploySaaSSSRS')
+        booleanParam(defaultValue: false, description: '', name: 'DeployCurlySSRS')
+    }
     environment {
-        packCCF = 'false'
-        buildPlatform = 'false'
-        buildPlatformDb = 'false'
-        buildSaaS = 'false'
-        deploySaaSSSRS = 'false'
-        buildSaaSDb = 'false'
-        buildCurly = 'false'
-        deployCurlySSRS = 'false'
-        buildCurlyDb = 'false'
-        buildLarrySS = 'false'
-        buildNxt = 'false'
-        buildStgPlatform = 'false'
+        packCCF="${env.PackCCF}"
+        buildPlatform="${env.BuildPlatform}"
+        buildPlatformDb="${env.BuildPlatformDb}"
+        buildSaaS="${env.BuildSaaS}"
+        buildSaaSDb="${env.BuildSaaSDb}"
+        buildCurly="${env.BuildCurly}"
+        buildCurlyDb="${env.BuildCurlyDb}"
+        buildLarrySS="${env.BuildLarrySS}"
+        buildNxt="${env.BuildNxt}"
+        buildStgPlatform="${env.BuildStgPlatform}"
         buildStgBenefits = 'false'
         buildStgTools = 'false'
-        buildStgSaaS = 'false'
-        buildStgCurly = 'false'
-        changeLines = ''
-        optionLine = ''
-        runAutoChangePS = 'false'
+        buildStgSaaS="${env.BuildStgSaaS}"
+        buildStgCurly="${env.BuildStgCurly}"
+        runAutoChangePS="${env.RunAutoChangePS}"
+
+        deployChannel='Test' 		//Set Octopus deployment channel. Values are 'Test' or 'Release'
+        packageLocation = '//COAUTFSARH001/Builds/TEST'
+        dbBuildLocation = '\\\\COAUTFSARH001\\Builds/AT'
+        version = "3.1.${BUILD_NUMBER}"
+        deployPrefix='CI_Test_'
+        deployRS="${env.DeployRS}"
+        deploySaaS="${env.DeploySaaS}"
+        deployCurly="${env.DeployCurly}"
+        deployLarryAT="${env.DeployLarryAT}"
+        deployLarryBAT="${env.DeployLarryBAT}"
+        deployCan="${env.DeployCan}"
+        deployNxt="${env.DeployNxt}"
+        deploySaaSSSRS="${env.DeploySaaSSSRS}"
+        deployCurlySSRS="${env.DeployCurlySSRS}"
     }
     stages {
         stage('checkout') {
@@ -128,22 +168,438 @@ pipeline {
                         build = build.previousBuild
                     }
                 }
-                echo "packCCF = ${packCCF}"
-                echo "buildPlatform = ${buildPlatform}"
-                echo "buildPlatformDb = ${buildPlatformDb}"
-                echo "buildSaaS = ${buildSaaS}"
-                echo "deploySaaSSSRS = ${deploySaaSSSRS}"
-                echo "buildSaaSDb = ${buildSaaSDb}"
-                echo "buildCurly = ${buildCurly}"
-                echo "deployCurlySSRS = ${deployCurlySSRS}"
-                echo "buildCurlyDb = ${buildCurlyDb}"
-                echo "buildLarrySS = ${buildLarrySS}"
-                echo "buildStgPlatform = ${buildStgPlatform}"
-                echo "buildStgBenefits = ${buildStgBenefits}"
-                echo "buildStgTools = ${buildStgTools}"
-                echo "buildStgSaaS = ${buildStgSaaS}"
-                echo "buildStgCurly = ${buildStgCurly}"
-                echo "changeLines = ${changeLines}"
+            }
+        }
+        stage('Pack CCF') {
+            when {
+                expression {
+                    packCCF == 'true'
+                }
+            }
+            steps {
+                echo 'Packing CCF...'
+                dir('ccfDir') {
+                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
+                    script {
+                        def configFilePath = "UAT\\nuspecConfig.txt"
+                        nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${version}"
+                    }
+                }
+            }
+        }
+        stage('Build Plat Stage') {
+            when {
+                expression {
+                    buildStgPlatform == 'true'
+                }
+            }
+            steps {
+                node('build01') {
+                    echo 'Building LeavePro Platform-Stage...'
+                    dir('PlatDb') {
+                        checkout([$class: 'TeamFoundationServerScm', cloakedPaths: '''$/Gold/Platform/AT/db-branch\n\
+                                                                                      $/Gold/Platform/AT/Deploy
+                                                                                      $/Gold/Platform/AT/Installers
+                                                                                      $/Gold/Platform/AT/packages
+                                                                                      $/Gold/Platform/AT/etc/java
+                                                                                      $/Gold/Platform/AT/etc/java-upgrade-branch
+                                                                                      $/Gold/Platform/AT/etc/packages
+                                                                                      $/Gold/Platform/AT/etc/test
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Distro
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Feeds
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Libraries
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/packages
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Services
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Solution Items
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Tests
+                                                                                      $/Gold/Platform/AT/etc/src/Benefits/Web
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/BatchDeployment
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Common
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/ConfigurationService
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Deployment
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Reed.Eligibility
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Reed.Tools.CodeGeneration
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/SilverlightApps
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/SilverlightCommon
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Tool2Tool
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Validation
+                                                                                      $/Gold/Platform/AT/etc/src/Tools/Web
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Communication
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.CommunicationIntegration
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Core
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.DataConverter
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.DocumentManager
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Eligibility
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Email
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Employee
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Employer
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.FolderMonitor
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.IntegrationFramework
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Ivr
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Leave
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.LeaveIntegration
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Letters
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.MDGuidelines
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Note
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Pem
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Postal
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Reporting
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Roster																							
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Security
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Takeover
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Task
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Tests
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Usage
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Web
+                                                                                      $/Gold/Platform/AT/etc/src/Services/Reed.Wizard''', 
+                        credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-platdb'])
+
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /m \"${WORKSPACE}\\PlatDb\\db\\Platform\\Reed.Platform.Db.sln\""
+
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /m \"${WORKSPACE}\\PlatDb\\db\\Benefits\\BenefitsDB.sln\""
+
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\"  /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /m \"${WORKSPACE}\\PlatDb\\db\\Tools\\Tools.sln\""
+
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveHubDb\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveHubDb\" "
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveClientDb\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveClientDb\" "
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\ReportDb\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\ReportDb\" "
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManager\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManager\" "
+                        bat "if not exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManagerDirector\" mkdir \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManagerDirector\" "
+
+                        bat "copy \"db\\Platform\\LeaveHubDb\\sql\\release\\*.*\" \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveHubDb\" "
+                        bat "copy \"db\\Platform\\LeaveClientDb\\bin\\output\\*.*\" \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\LeaveClientDb\" "							
+                        bat "copy \"db\\Platform\\ReportDb\\bin\\output\\*.*\" \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\ReportDb\" "
+                        bat "copy \"db\\Platform\\DocumentManager\\bin\\output\\*.*\" \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManager\" "
+                        bat "copy \"db\\Platform\\DocumentManagerDirector\\bin\\output\\*.*\" \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\\DocumentManagerDirector\" "
+
+                        bat "if not exist \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" mkdir \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" "
+
+                        bat "copy \"db\\Benefits\\BenefitsHubDb\\sql\\release\\*.*\" \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "copy \"db\\Benefits\\BenefitsClientDb\\sql\\release\\*.*\" \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" "
+
+                        bat "if not exist \"${dbBuildLocation}\\Tools AT DB Stage\\Tools AT DB Stage_3.1.${BUILD_NUMBER}\" mkdir \"${dbBuildLocation}\\Tools AT DB Stage\\Tools AT DB Stage_3.1.${BUILD_NUMBER}\" "
+
+                        bat "copy \"db\\Tools\\bin\\output\\*.*\" \"${dbBuildLocation}\\Tools AT DB Stage\\Tools AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                    }
+                }
+            }
+        }
+        stage ('Build SaaS Stage') {
+            when {
+                expression {
+                    buildStgSaaS == 'true'
+                }
+            }
+            steps {
+                echo 'Building LeavePro SaaS-Stage...'
+                node('build01') {
+                    dir('SaaSDb') {
+                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/AT/Database/CoreDatabases', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, seUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saas'])
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /m \"${WORKSPACE}\\SaaSDb\\iAM.CoreDatabase.sln\""
+
+                        bat "if not exist \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" mkdir \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" "
+
+                        bat "copy \"LeaveHubDb_SaaS\\sql\\release\\*.*\" \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "copy \"LeaveClientDb_SaaS\\sql\\release\\*.*\" \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "copy \"ReportDb_SaaS\\sql\\release\\*.*\" \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                    }
+                }
+            }
+        }
+        stage ('Build Curly Stage') {
+            when {
+                expression {
+                    buildStgCurly == 'true'
+                }
+            }
+            steps {
+                echo 'Building LeavePro Curly-Stage...'
+                node('build01') {
+                    dir('CurlyDb') {						
+                        bat "if not exist \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" mkdir \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" "
+
+                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Curly/AT/Database/CoreDatabases', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-curly'])
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /m \"${WORKSPACE}\\CurlyDb\\iAM.CoreDatabase.sln\""
+
+                        bat "copy \"LeaveHubDb_Curly\\sql\\release\\*.*\" \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "copy \"LeaveClientDb_Curly\\sql\\release\\*.*\" \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                        bat "copy \"ReportDb_Curly\\sql\\release\\*.*\" \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                    }
+                }
+            }
+        }
+        stage('RunAutoChangePS') {
+            when {
+                expression {
+                    runAutoChangePS == 'true'
+                }
+            }
+            steps {
+                echo '**********************************************'
+                echo '**********************************************'
+                echo 'Run BLD001 Change Script...'
+                echo '**********************************************'
+                echo '**********************************************'
+                //PowerShell(". '\\\\COAUTFSBLD001\\ChangeScripts2\\testscript\\RunChangeScripts.ps1'") 
+
+                bat "if exist \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\" rmdir /Q /S \"${dbBuildLocation}\\Platform AT DB Stage\\Platform AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                bat "if exist \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" rmdir /Q /S \"${dbBuildLocation}\\Benefits AT DB Stage\\Benefits AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                bat "if exist \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" rmdir /Q /S \"${dbBuildLocation}\\SaaS AT DB Stage\\SaaS AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                bat "if exist \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" rmdir /Q /S \"${dbBuildLocation}\\Curly AT DB Stage\\Curly AT DB Stage_3.1.${BUILD_NUMBER}\" "
+                bat "if exist \"${dbBuildLocation}\\Tools AT DB Stage\\Tools AT DB Stage_3.1.${BUILD_NUMBER}\" rmdir /Q /S \"${dbBuildLocation}\\Tools AT DB Stage\\Tools AT DB Stage_3.1.${BUILD_NUMBER}\" "
+            }
+        } //RunAutoChangePS StageClose
+
+        stage('Platform') {
+            parallel {
+                stage('Platform Build') {
+                    when {
+                        expression {
+                            buildPlatform == 'true'
+                        }
+                    }
+                    steps {
+                        echo 'Building LeavePro Platform...'
+                        node('archive01') {
+                            dir('PlatDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
+                                bat 'del /F etc\\lib\\PlatformAssemblyInfo.cs'
+                                writeFile file: 'etc/lib/PlatformAssemblyInfo.cs', text: "using System.Reflection;\n" +
+                                                                                         "[assembly: AssemblyCompany(\"Reed Group, Ltd\")]\n" +
+                                                                                         "[assembly: AssemblyProduct(\"LeavePro™ Platform\")]\n" +
+                                                                                         "[assembly: AssemblyCopyright(\"Copyright © Reed Group, Ltd 2015\")]\n" +
+                                                                                         "[assembly: AssemblyTrademark(\"'LeavePro' is a TM of Reed Group, Ltd, Westminster, Colorado\")]\n" +
+                                                                                         "[assembly: AssemblyCulture(\"\")] // neutral\n" +
+                                                                                         "[assembly: System.Runtime.InteropServices.ComVisible(false)]\n" +
+                                                                                         "// ******************************************************************************************\n" +
+                                                                                         "// Platform version should be kept to the appropriate major and minor value for this branch\n" +
+                                                                                         "// ******************************************************************************************\n" +
+                                                                                         "[assembly: AssemblyInformationalVersion(\"3.1.${BUILD_NUMBER}.0\")]\n" +
+                                                                                         "[assembly: AssemblyFileVersion(\"3.1.${BUILD_NUMBER}.0\")]\n" +
+                                                                                         "[assembly: AssemblyVersion(\"3.1.${BUILD_NUMBER}.0\")]"
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
+                                script {
+                                    def configFilePath = "etc\\nuspecConfig.txt"
+                                    nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${version}"
+                                    nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${version}"
+                                    nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${version}"
+                                }
+                            }
+                        }				
+                    }
+                }
+                stage('PlatDb Build') {
+                    when {
+                        expression {
+                            buildPlatformDb == 'true'
+                        }
+                    }
+                    steps {
+                        node('build01'){
+                            dir('PlatDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /v:diag /p:Configuration=Automation /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:CodeAnalysisRuleSet=\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\Team Tools\\Static Analysis Tools\\Rule Sets\\MinimumRecommendedRules.ruleset\" /m \"${WORKSPACE}\\PlatDir\\db-branch\\Platform\\Reed.Platform.Db.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Benefits\\BenefitsDB.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /p:Platform=\"Mixed Platforms\" /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\db-branch\\Tools\\Tools.sln\""
+                                script {
+                                    def configFilePath = "etc\\nuspecConfig.txt"
+                                    nugetPack "PlatformDb", configFilePath, "${packageLocation}/Platform", "${version}"
+                                    nugetPack "BenefitsDb", configFilePath, "${packageLocation}/Benefits", "${version}"
+                                    nugetPack "ToolsDb", configFilePath, "${packageLocation}/Tools", "${version}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('SaaS') {
+            parallel {
+                stage('SaaS Build') {
+                    when {
+                        expression {
+                            buildSaaS == 'true'
+                        }
+                    }
+                    steps {
+                        echo 'Building LeavePro SaaS...'
+                        node('archive01') {
+                            dir('SaaSDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saas'])
+                                bat "cd \"Source Code/iAM.Web/iAMWeb\" & npm install"
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\SaaSDir\\iAM Build Solution.sln\""
+                                bat "cd \"Source Code/iAM.Web/iAMWeb\" & grunt build"
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\iAM Build Solution.sln\""
+
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\SaaSDir\\Configuration\\Configuration.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\Configuration\\Configuration.sln\""
+                                script {
+                                    def configFilePath = "nuspecConfig.txt"
+                                    nugetPack "SaaS", configFilePath, "${packageLocation}/SaaS", "${version}"
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('SaaSDb Build') {
+                    when {
+                        expression {
+                            buildSaaSDb == 'true'
+                        }
+                    }
+                    steps {
+                        node('build01') {
+                            dir('SaaSDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saas'])
+
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\Database\\CoreDatabases-branch\\iAM.CoreDatabase.sln\""
+                                script {
+                                    def configFilePath = "nuspecConfig.txt"
+                                    nugetPack "SaaSDb", configFilePath, "${packageLocation}/SaaS", "${version}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Curly') {
+            parallel {
+                stage('Curly Build') {
+                    when {
+                        expression {
+                            buildCurly == 'true'
+                        }
+                    }
+                    steps {
+                        echo 'Building LeavePro Curly...'
+                        node('archive01') {
+                            dir('CurlyDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Curly/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-curly'])
+
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\CurlyDir\\iAM Build Solution.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\CurlyDir\\iAM Build Solution.sln\""
+
+                                bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\CurlyDir\\Configuration\\Configuration.sln\""
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\CurlyDir\\Configuration\\Configuration.sln\""
+                                script {
+                                    def configFilePath = "nuspecConfig.txt"
+                                    nugetPack "Curly", configFilePath, "${packageLocation}/Curly", "${version}"
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('CurlyDb Build') {
+                    when {
+                        expression {
+                            buildCurlyDb == 'true'
+                        }
+                    }
+                    steps {
+                        node('build01') {
+                            dir('CurlyDir') {
+                                checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Curly/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-curly'])
+
+                                bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\CurlyDir\\Database\\CoreDatabases-branch\\iAM.CoreDatabase.sln\""
+                                script {
+                                    def configFilePath = "nuspecConfig.txt"
+                                    nugetPack "CurlyDb", configFilePath, "${packageLocation}/Curly", "${version}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Larry Build') {
+            when {
+                expression {
+                    buildLarrySS == 'true'
+                }
+            }
+            steps {
+                node('archive01') {
+                    echo 'Building LeavePro Larry Self Service...'
+                    dir('LarryDir') {
+                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Larry/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-larry'])
+                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\LarryDir\\iAM Build Solution.sln\""
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Automation-services /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\LarryDir\\iAM Build Solution.sln\""
+                        script {
+                            def configFilePath = "nuspecConfig.txt"
+                            nugetPack "Larry", configFilePath, "${packageLocation}/Larry", "${version}"
+                        }
+                    }
+                }
+            }
+        }
+        stage('NXT Build') {
+            when {
+                expression {
+                    buildNxt == 'true'
+                }
+            }
+            steps {
+                echo 'Building LeavePro NXT...'
+                node('archive01') {
+                    bat "if not exist \"SaaS/Dev/Source Code/Common\" mkdir \"SaaS/Dev/Source Code/Common\""
+                    dir('SaaS/Dev/Source Code/Common') {
+                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/Dev/Source Code/Common', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saasnxt'])
+                    }
+                    dir('NXTDir') {
+                        /*****  Checkout on Octos 01 *****/
+//			checkout([$class: 'GitSCM', branches: [[name: '*/at']], browser: [$class: 'TFS2013GitRepositoryBrowser', repoUrl: 'http://coautfssp001/tfs/iAM/_git/LeavePro%20NXT'], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '38a8e1c4-0c0a-494b-b3a8-97599da1f31b', url: 'http://coautfssp001/tfs/iAM/_git/LeavePro%20NXT']]])
+                        /*****  Checkout on Octos 02 *****/
+                        checkout([$class: 'GitSCM', branches: [[name: '*/at']], browser: [$class: 'TFS2013GitRepositoryBrowser', repoUrl: 'http://coautfssp001/tfs/iAM/_git/LeavePro%20NXT'], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '83571f73-93d5-4604-b3fa-50255dae11ec', url: 'http://coautfssp001/tfs/iAM/_git/LeavePro%20NXT']]])					
+                        bat "npm install"
+                        bat 'C:\\Ruby24-x64\\bin\\ruby.exe -e \'gem "compass"\''
+                        bat "cd LeavePro.Nxt.Security & bower install"
+                        bat "cd LeavePro.Nxt.UI & bower install"
+                        bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\NXTDir\\LeavePro.Nxt.sln\""
+                        bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build \"${WORKSPACE}\\NXTDir\\LeavePro.Nxt.sln\""
+                        bat "cd LeavePro.Nxt.Security & grunt build"
+                        bat "cd LeavePro.Nxt.UI & grunt build"				
+                        script {
+                            def configFilePath = "nuspecConfig.txt"
+                            nugetPack "Nxt", configFilePath, "${packageLocation}", "${version}"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Create Release') {
+            when {
+                expression {
+                    deployRS == 'true' || deploySaaS == 'true' || deployCurly == 'true' || deployLarryAT == 'true' || deployLarryBAT == 'true' || deployCan == 'true' || deployNxt == 'true'
+                }
+            }
+            steps {
+                script {
+                    bat "Octo.exe create-release --project=01.Stop.Websites.Services --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=02.Deploy.GAC --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=03.Deploy.Services --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=04.Deploy.Websites --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=06.Plat.Database.Deploy --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=07.Env.Database.Deploy --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    bat "Octo.exe create-release --project=09.Restart.Websites.Services --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    if (deployNxt == 'true' && (deployRS == 'true' || deploySaaS == 'true' || deployCan == 'true')) {
+                        bat "Octo.exe create-release --project=05.NXT.Websites --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    }
+                    if (deploySaaSSSRS == 'true' || deployCurlySSRS == 'true') {
+                        bat "Octo.exe create-release --project=08.SSRS.Report.Deploy --channel=${deployChannel} --server=http://swp100octos01/Octopus --apiKey=API-QLU5BT0QR9GLGEZZKDJZRORU0DQ --progress"
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            when {
+                expression {
+                    deployRS == 'true' || deploySaaS == 'true' || deployCurly == 'true' || deployLarryAT == 'true' || deployLarryBAT == 'true' || deployCan == 'true' || deployNxt == 'true'
+                }
+            }
+            steps {
+                build job: 'AT.Deploy', parameters: [booleanParam(name: 'DeployRS', value: deployRS.toBoolean()), booleanParam(name: 'DeploySaaS', value: deploySaaS.toBoolean()), booleanParam(name: 'DeployCurly', value: deployCurly.toBoolean()), booleanParam(name: 'DeployLarryAT', value: deployLarryAT.toBoolean()), booleanParam(name: 'DeployLarryBAT', value: deployLarryBAT.toBoolean()), booleanParam(name: 'DeployCan', value: deployCan.toBoolean()), booleanParam(name: 'DeployNxt', value: deployNxt.toBoolean()), booleanParam(name: 'DeploySaaSSSRS', value: deploySaaSSSRS.toBoolean()), booleanParam(name: 'DeployCurlySSRS', value: deployCurlySSRS.toBoolean())], wait: false
             }
         }
     }
