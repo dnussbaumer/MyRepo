@@ -1,14 +1,20 @@
 def call(project, configFilePath, file) {
+    echo 'Entering method call'
     def configText = readFile(configFilePath)
+    echo 'file read'
     def configLines = configText.split('\n')
+    echo 'lines split'
     def changeFound = 'false'
     
     def configEndingIndex = configLines.size() - 1
     for (i in 0..configEndingIndex) {
         def configValues = configLines[i].split(',')
+        echo 'values split'
         if (configValues[0] == project && file.path.contains(configValues[1])) {
+            echo "found change in ${project}"
             changeFound = 'true'
         }
     }
+    echo 'returning'
     return changeFound
 }
