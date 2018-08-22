@@ -93,7 +93,7 @@ pipeline {
                     def configFileTextDb = readFile(configFilePathDb)
                     //while(build != null && build.result != 'SUCCESS') {
                     while(build != null) {
-                        for (changeLog in build.changeSets) {
+                        for (changeLog in build.rawBuild.changeSets) {
                             echo 'Changes Found...'
                             for(entry in changeLog.items) {
                                 echo "${entry.commitId} by ${entry.author} on ${entry.date}: ${entry.msg}"
