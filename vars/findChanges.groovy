@@ -3,7 +3,7 @@ def call(project, configFileText, file) {
     def changeFound = 'false'
 
     def configEndingIndex = configLines.size() - 1
-    echo "Method project = ${project}"
+    echo "Method Project = ${project}"
     for (i in 0..configEndingIndex) {
         echo "configLine = ${configLines[i]}"
         def configValues = configLines[i].split(',')
