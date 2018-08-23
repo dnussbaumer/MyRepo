@@ -5,6 +5,8 @@ pipeline {
     //agent { label 'build01' }
     agent any
     parameters {
+        string(defaultValue: '3', description: '', name: 'MajorVersion', trim: true)
+        string(defaultValue: '0', description: '', name: 'MinorVersion', trim: true)
         booleanParam(defaultValue: false, description: '', name: 'PackCCF')
         booleanParam(defaultValue: false, description: '', name: 'BuildPlatform')
         booleanParam(defaultValue: false, description: '', name: 'BuildPlatformDb')
@@ -32,6 +34,9 @@ pipeline {
         booleanParam(defaultValue: false, description: '', name: 'DeployCurlySSRS')
     }
     environment {
+        majorVersion="${env.MajorVersion}"
+        minorVersion="${env.MinorVersion}"
+        projectVersion="0"
         packCCF="${env.PackCCF}"
         buildPlatform="${env.BuildPlatform}"
         buildPlatformDb="${env.BuildPlatformDb}"
@@ -64,112 +69,6 @@ pipeline {
         deployCurlySSRS="${env.DeployCurlySSRS}"
     }
     stages {
-        stage('checkout') {
-            steps {
-                dir('ccfDir') {
-                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
-                }
-                dir('PlatDir') {
-                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
-                }
-                dir('SaaSDir') {
-                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/SaaS/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-saas'])
-                }
-                dir('CurlyDir') {
-                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Curly/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-curly'])
-                }
-                dir('LarryDir') {
-                    checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Larry/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-larry'])
-                }
-                script {
-                    build = currentBuild
-                    List configList = []
-                    List dbConfigList = []
-                    List dbResultList = []
-                    changeLines = ''
-                    def configFilePath = "resources\\pollingConfig.txt"
-                    def configFileText = readFile(configFilePath)
-                    def configFilePathDb = "resources\\pollingConfigDb.txt"
-                    def configFileTextDb = readFile(configFilePathDb)
-                    //while(build != null && build.result != 'SUCCESS') {
-                    while(build != null) {
-                        for (changeLog in build.rawBuild.changeSets) {
-                            echo 'Changes Found...'
-                            for(entry in changeLog.items) {
-                                echo "${entry.commitId} by ${entry.author} on ${entry.date}: ${entry.msg}"
-                                echo 'Files Affected...'
-                                for(file in entry.affectedFiles) {
-                                    if (file.path.contains('Support/Central Configuration Files') || file.path.contains('Gold/Platform/AT') || file.path.contains('SaaS/AT') || file.path.contains('Curly/AT') || file.path.contains('Larry/AT')) {
-                                        echo file.path.toString()
-                                        if (packCCF == 'false') {
-                                            packCCF = findChanges "CCF", configFileText, file
-                                        }
-                                        if (buildPlatform == 'false') {
-                                            buildPlatform = findChanges "Platform", configFileText, file
-                                        }
-                                        if (buildPlatformDb == 'false') {
-                                            buildPlatformDb = findChanges "PlatformDb", configFileText, file
-                                        }
-                                        if (buildSaaS == 'false') {
-                                            buildSaaS = findChanges "SaaS", configFileText, file
-                                        }
-                                        if (deploySaaSSSRS == 'false') {
-                                            deploySaaSSSRS = findChanges "SaaSSSRS", configFileText, file
-                                        }
-                                        if (buildSaaSDb == 'false') {
-                                            buildSaaSDb = findChanges "SaaSDB", configFileText, file
-                                        }
-                                        if (buildCurly == 'false') {
-                                            buildCurly = findChanges "Curly", configFileText, file
-                                        }
-                                        if (deployCurlySSRS == 'false') {
-                                            deployCurlySSRS = findChanges "CurlySSRS", configFileText, file
-                                        }
-                                        if (buildCurlyDb == 'false') {
-                                            buildCurlyDb = findChanges "CurlyDB", configFileText, file
-                                        }
-                                        if (buildLarrySS == 'false') {
-                                            buildLarrySS = findChanges "Larry", configFileText, file
-                                        }
-                                        dbResultList = findDbChanges "Platform",configFileTextDb, file
-                                        buildStgPlatform = dbResultList[0]
-                                        optionLine = dbResultList[1]
-                                        if (buildStgPlatform == 'true' && !(changeLines.contains("-Schema Platform"))){
-                                            changeLines = addChanges changeLines, optionLines
-                                        }
-                                        dbResultList = findDbChanges "Benefits",configFileTextDb, file
-                                        buildStgBenefits = dbResultList[0]
-                                        optionLine = dbResultList[1]
-                                        if (buildStgBenefits == 'true' && !(changeLines.contains("-Schema Benefits"))){
-                                            changeLines = addChanges changeLines, optionLines
-                                        }
-                                        dbResultList = findDbChanges "Tools",configFileTextDb, file
-                                        buildStgTools = dbResultList[0]
-                                        optionLine = dbResultList[1]
-                                        if (buildStgTools == 'true' && !(changeLines.contains("-Schema Tools"))){
-                                            changeLines = addChanges changeLines, optionLines
-                                        }
-                                        dbResultList = findDbChanges "SaaS",configFileTextDb, file
-                                        buildStgSaaS = dbResultList[0]
-                                        optionLine = dbResultList[1]
-                                        if (buildStgSaaS == 'true' && !(changeLines.contains("-Schema SaaS"))){
-                                            changeLines = addChanges changeLines, optionLines
-                                        }
-                                        dbResultList = findDbChanges "Curly",configFileTextDb, file
-                                        buildStgCurly = dbResultList[0]
-                                        optionLine = dbResultList[1]
-                                        if (buildStgCurly == 'true' && !(changeLines.contains("-Schema Curly"))){
-                                            changeLines = addChanges changeLines, optionLines
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        build = build.previousBuild
-                    }
-                }
-            }
-        }
         stage('Pack CCF') {
             when {
                 expression {
@@ -181,6 +80,7 @@ pipeline {
                 dir('ccfDir') {
                     checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                     script {
+                        projectVersion = getVersion "\\\\COAUTFSARH001\\Builds\\NugetPackages\\AT\\Platform" "Reed.CommunicationIntegration.Service*"
                         def configFilePath = "UAT\\nuspecConfig.txt"
                         nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${version}"
                     }
