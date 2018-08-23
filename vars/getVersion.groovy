@@ -1,6 +1,6 @@
 def call(packageDir, filter) {
-    packageVersion = powershell returnStdout: true, script: '''$dir = "\\\\COAUTFSARH001\\Builds\\NugetPackages\\AT\\Platform"
-                    $filter="Reed.CommunicationIntegration.Service*"
+    packageVersion = powershell returnStdout: true, script: '''$dir = "${packageDir}"
+                    $filter="${filter}"
                     $latest = Get-ChildItem -Path $dir -Filter $filter | Sort-Object -Descending { [regex]::Replace($_, '\\d+', { $args[0].Value.PadLeft(20) })} | Select-Object -First 1
                     $filterArray = $filter.Split(".")
                     $fileNameArray = $latest.name.Split(".")
