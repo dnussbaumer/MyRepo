@@ -75,7 +75,6 @@ pipeline {
                 }
             }
             steps {
-                cleanWs()
                 echo 'Packing CCF...'
                 dir('ccfDir') {
                     checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
