@@ -80,7 +80,7 @@ pipeline {
                 dir('ccfDir') {
                     checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/Central Configuration Files/', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-ccf'])
                     script {
-                        projectVersion = getVersion "${packageLocation}/Platform", "Reed.SvcHost.Communication*"
+                        projectVersion = getVersion "${packageLocation}/Platform", "AT_CCF*"
                         def configFilePath = "UAT\\nuspecConfig.txt"
                         nugetPack "CCF", configFilePath, "${packageLocation}/Platform", "${majorVersion}.${minorVersion}.${projectVersion}"
                     }
@@ -281,6 +281,7 @@ pipeline {
                                 bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
                                 script {
                                     def configFilePath = "etc\\nuspecConfig.txt"
+                                    projectVersion = getVersion "${packageLocation}/Platform", "Reed.SvcHost.Communication*"
                                     nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${version}"
                                     nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${version}"
                                     nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${version}"
