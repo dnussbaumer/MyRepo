@@ -265,7 +265,7 @@ pipeline {
                                 checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
                                 script {
                                     def projectVersion = getVersion "${packageLocation}/Platform", "Reed.SvcHost.Communication*"
-                                    def packageVersion = majorVersion + "." + minorVersion + "." + projectVersion
+                                    def packageVersion = majorVersion + "." + minorVersion + "." + projectVersion + ".0"
                                     bat 'del /F etc\\lib\\PlatformAssemblyInfo.cs'
                                     writeFile file: 'etc/lib/PlatformAssemblyInfo.cs', text: "using System.Reflection;\n" +
                                                                                              "[assembly: AssemblyCompany(\"Reed Group, Ltd\")]\n" +
@@ -277,9 +277,9 @@ pipeline {
                                                                                              "// ******************************************************************************************\n" +
                                                                                              "// Platform version should be kept to the appropriate major and minor value for this branch\n" +
                                                                                              "// ******************************************************************************************\n" +
-                                                                                             "[assembly: AssemblyInformationalVersion(\"${projectVersion}.0\")]\n" +
-                                                                                             "[assembly: AssemblyFileVersion(\"${projectVersion}.0\")]\n" +
-                                                                                             "[assembly: AssemblyVersion(\"${projectVersion}.0\")]"
+                                                                                             "[assembly: AssemblyInformationalVersion(\"${packageVersion}\")]\n" +
+                                                                                             "[assembly: AssemblyFileVersion(\"${packageVersion}\")]\n" +
+                                                                                             "[assembly: AssemblyVersion(\"${packageVersion}\")]"
                                     bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateProjectSpecificOutputFolder=true /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=CIPublish /m \"${WORKSPACE}\\PlatDir\\etc\\Reed.LeavePro.sln\""
                                     def configFilePath = "etc\\nuspecConfig.txt"                                    
                                     nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${packageVersion}"
