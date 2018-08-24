@@ -10,8 +10,8 @@ def call(packageDir, filter) {
                     \$newVersion = \$oldVersion + 1
                     \$newVersion"""
     println psScript
-    def packageVersion = "11"
-//    def packageVersion = powershell returnStdout: true, script: '''$dir = "${packageDir}"\n\
+//    def packageVersion = "11"
+    def packageVersion = powershell returnStdout: true, script: psScript
 //                    Start-Sleep -s 15
 //                    $filter="${filter}"
 //                    $latest = Get-ChildItem -Path $dir -Filter $filter | Sort-Object -Descending { [regex]::Replace($_, '\\d+', { $args[0].Value.PadLeft(20) })} | Select-Object -First 1
