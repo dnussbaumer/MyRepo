@@ -265,7 +265,7 @@ pipeline {
                                 checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Gold/Platform/AT', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-plat'])
                                 script {
                                     def projectVersion = getVersion "${packageLocation}/Platform", "Reed.SvcHost.Communication*"
-                                    def packageVersion = majorVersion + "." + minorVersion + "." + projectVersion + ".0"
+                                    def packageVersion = majorVersion + "." + minorVersion + "." + projectVersion
                                     bat 'del /F etc\\lib\\PlatformAssemblyInfo.cs'
                                     writeFile file: 'etc/lib/PlatformAssemblyInfo.cs', text: "using System.Reflection;\n" +
                                                                                              "[assembly: AssemblyCompany(\"Reed Group, Ltd\")]\n" +
