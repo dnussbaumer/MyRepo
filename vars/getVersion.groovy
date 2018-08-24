@@ -1,13 +1,13 @@
 def call(packageDir, filter) {
-    def psScript = "\$dir = '${packageDir}'\n" +
-                    "\$filter='${filter}'\n" +
-                    "\$latest = Get-ChildItem -Path \$dir -Filter \$filter | Sort-Object -Descending { [regex]::Replace(\$_, '\\d+', { \$args[0].Value.PadLeft(20) })} | Select-Object -First 1\n" +
-                    "\$filterArray = \$filter.Split('.')\n" +
-                    "\$fileNameArray = \$latest.name.Split('.')\n" +
-                    "\$versionIndex = \$filterArray.length + 2\n" +
-                    "\$oldVersion = [convert]::ToInt32(\$fileNameArray[\$versionIndex],10)\n" +
-                    "\$newVersion = \$oldVersion + 1\n" +
-                    "\$newVersion"
+    def psScript = """\$dir = '${packageDir}'\n
+                    \$filter='${filter}'\n
+                    \$latest = Get-ChildItem -Path \$dir -Filter \$filter | Sort-Object -Descending { [regex]::Replace(\$_, '\\d+', { \$args[0].Value.PadLeft(20) })} | Select-Object -First 1\n
+                    \$filterArray = \$filter.Split('.')\n
+                    \$fileNameArray = \$latest.name.Split('.')\n
+                    \$versionIndex = \$filterArray.length + 2\n
+                    \$oldVersion = [convert]::ToInt32(\$fileNameArray[\$versionIndex],10)\n
+                    \$newVersion = \$oldVersion + 1\n
+                    \$newVersion"""
     bat "echo ${psScript}"
     def packageVersion = "11"
 //    def packageVersion = powershell returnStdout: true, script: '''$dir = "${packageDir}"\n\
