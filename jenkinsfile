@@ -52,8 +52,8 @@ pipeline {
         buildStgCurly="${env.BuildStgCurly}"
         runAutoChangePS="${env.RunAutoChangePS}"
 
-        deployChannel='Release' 		//Set Octopus deployment channel. Values are 'Test' or 'Release'
-        packageLocation = '//COAUTFSARH001/Builds/NugetPackages/AT'
+        deployChannel='Test' 		//Set Octopus deployment channel. Values are 'Test' or 'Release'
+        packageLocation = '//COAUTFSARH001/Builds/TEST'
         dbBuildLocation = '\\\\COAUTFSARH001\\Builds/AT'
         deployPrefix=''
         deployRS="${env.DeployRS}"
