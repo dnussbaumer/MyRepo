@@ -284,6 +284,7 @@ pipeline {
                                     nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${packageVersion}"
                                     nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${packageVersion}"
                                     nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${packageVersion}"
+                                    publishArtifacts pwd()
                                 }
                             }
                         }				
