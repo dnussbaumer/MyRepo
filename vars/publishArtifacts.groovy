@@ -13,14 +13,17 @@ def call (workspacePath) {
         etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll
         etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb
         etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll
-        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb\n\
+        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb
         etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.dll
         etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.pdb"""
         def configLines = configText.split('\n')
         def lineIndex = configLines.size() - 1
         for(i in 0..lineIndex) {
-        def source = workspacePath + configLines[i]
-        batScript += "Xcopy \"${source}\" . /q /y /r\n"
+            def source = workspacePath + configLines[i]
+            echo "workspacePath = ${workspacePath}"
+            echo "configLines[${i}] =  ${configLines[i]}"
+            echo "batScript = Xcopy \"${source}\" . /q /y /r\n"
+            batScript += "Xcopy \"${source}\" . /q /y /r\n"
         }
         bat batScript
         powershell 'Start-ScheduledTask "TF Checkin"'
