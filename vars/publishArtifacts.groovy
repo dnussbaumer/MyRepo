@@ -1,28 +1,30 @@
 def call (workspacePath) {
-//    def configText = readFile(configFilePath)
-    def batScript = ""
-    if (!workspacePath.endsWith("\\")) {
-        workspacePath += "\\"
+    bat 'if exist PlatCommon rmdir PlatCommon /s /q'
+    dir('PlatCommon/Reed.Platform') {
+        //            def configText = readFile(configFilePath)
+        //                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/DevOps/Pipeline/AT/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
+        checkout([$class: 'TeamFoundationServerScm', password: hudson.util.Secret.fromString('23YNJFnvY!5J'), projectPath: '$/Support/DevOps/Pipeline/AT/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, userName: 'tfsbuild', workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
+        def batScript = ""
+//        def workspacePath = "D:\\workspace\\Pipeline.Tester\\PlatDir\\"
+        def configText = """etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll
+        etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb
+        etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll
+        etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb
+        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll
+        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb
+        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll
+        etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb\n\
+        etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.dll
+        etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.pdb"""
+        def configLines = configText.split('\n')
+        def lineIndex = configLines.size() - 1
+        for(i in 0..lineIndex) {
+        def source = workspacePath + configLines[i]
+        batScript += "Xcopy \"${source}\" . /q /y /r\n"
+        }
+        bat batScript
+        powershell 'Start-ScheduledTask "TF Checkin"'
     }
-    def configText = """PlatDir\\etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform"""
-    def configLines = configText.split('\n')
-    def lineIndex = configLines.size() - 1
-    bat "echo lineIndex = ${lineIndex}"
-    for(i in 0..lineIndex) {
-        def configLine = configLines[i].toString()
-        def configValues = configLine.split(',')
-        def source = workspacePath + configValues[0]
-        def target = workspacePath + configValues[1]
-        batScript += "Xcopy \"${source}\" \"${target}\" /q /y /r\n"
-    }
-    bat batScript
 }
 
 
@@ -33,28 +35,32 @@ PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communicatio
 //        stage('Publish Artifact') {
 //            steps {
 //                script {
-//        //            def configText = readFile(configFilePath)
-//                    def batScript = ""
-//                    def workspacePath = pwd() + "\\"
-//                    def configText = """PlatDir\\etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll,SaaSDir\\Source Code\\Common\\Reed.Platform
-//PlatDir\\etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb,SaaSDir\\Source Code\\Common\\Reed.Platform"""
-//                    def configLines = configText.split('\n')
-//                    def lineIndex = configLines.size() - 1
-//                    bat "echo lineIndex = ${lineIndex}"
-//                    for(i in 0..lineIndex) {
-//                        def configLine = configLines[i].toString()
-//                        def configValues = configLine.split(',')
-//                        def source = workspacePath + configValues[0]
-//                        def target = workspacePath + configValues[1]
-//                        batScript += "Xcopy \"${source}\" \"${target}\" /q /y /r\n"
+//                    bat 'if exist PlatCommon rmdir PlatCommon /s /q'
+//                    dir('PlatCommon/Reed.Platform') {
+//            //            def configText = readFile(configFilePath)
+////                        checkout([$class: 'TeamFoundationServerScm', credentialsConfigurer: [$class: 'AutomaticCredentialsConfigurer'], projectPath: '$/Support/DevOps/Pipeline/AT/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
+//                        checkout([$class: 'TeamFoundationServerScm', password: hudson.util.Secret.fromString('23YNJFnvY!5J'), projectPath: '$/Support/DevOps/Pipeline/AT/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, userName: 'tfsbuild', workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
+//                        def batScript = ""
+//                        def workspacePath = "D:\\workspace\\Pipeline.Tester\\PlatDir\\"
+//                        def configText = """etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll
+//etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb
+//etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll
+//etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb\n\
+//etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.dll
+//etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.pdb"""
+//                        def configLines = configText.split('\n')
+//                        def lineIndex = configLines.size() - 1
+//                        for(i in 0..lineIndex) {
+//                            def source = workspacePath + configLines[i]
+//                            batScript += "Xcopy \"${source}\" . /q /y /r\n"
+//                        }
+//                        bat batScript
+//                        powershell 'Start-ScheduledTask "TF Checkin"'
 //                    }
-//                    bat batScript
 //                }
 //            }
 //        }        
