@@ -284,7 +284,7 @@ pipeline {
                                     nugetPack "Platform", configFilePath, "${packageLocation}/Platform", "${packageVersion}"
                                     nugetPack "Benefits", configFilePath, "${packageLocation}/Benefits", "${packageVersion}"
                                     nugetPack "Tools", configFilePath, "${packageLocation}/Tools", "${packageVersion}"
-                                    def publishConfigs = pwd() + "etc\\publishConfig.txt"
+                                    def publishConfigs = pwd() + "\\etc\\publishConfig.txt"
                                     publishArtifacts pwd(), publishConfigs
                                 }
                             }
