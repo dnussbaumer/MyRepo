@@ -29,6 +29,15 @@ etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Re
             batScript += "Xcopy \"${source}\" . /q /y /r\n"
         }
         bat batScript
+        def currentDir = pwd()
+        bat 'del /F C:\\tf_checkin.bat'
+        writeFile file: 'C:\\tf_checkin.bat', text: """(\n
+D:
+cd ${currentDir}
+\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\TF.exe\" workspaces /collection:\"http://coautfssp001/tfs/iam\"
+\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\TF.exe\" add * /recursive /noignore
+\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\TF.exe\" checkin /comment:\"Auto Checkin\" /force /noprompt /override:\"Auto Checkin\" /recursive /validate
+) >> C:\\output.txt 2>&1"""
         powershell 'Start-ScheduledTask "TF Checkin"'
     }
 }
