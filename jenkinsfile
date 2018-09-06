@@ -339,10 +339,20 @@ pipeline {
                                 bat "\"C:\\Program Files (x86)\\Nuget\\nuget.exe\" restore \"%WORKSPACE%\\SaaSDir\\Configuration\\Configuration.sln\""
                                 bat "\"c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release /t:Clean,Build /p:GenerateBuildInfoConfigFile=false /p:DeployOnBuild=True /p:PublishProfile=2013VSPublish /m \"${WORKSPACE}\\SaaSDir\\Configuration\\Configuration.sln\""
                                 script {
-                                    def patchVersion = getVersion "${packageLocation}/SaaS", "iAMWeb*"
-                                    def packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
                                     def configFilePath = "nuspecConfig.txt"
+                                    def patchVersion = getVersion "${packageLocation}/SaaS", "Reed.SvcHost.Export*"
+                                    def packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
                                     nugetPack "SaaS", configFilePath, "${packageLocation}/SaaS", "${packageVersion}"
+                                    
+                                    patchVersion = getVersion "${packageLocation}/SaaS", "iAMWeb*"
+                                    packageVersion = "3.1.${patchVersion}"
+                                    def webConfigFilePath = "webNuspecConfig.txt"
+                                    nugetPack "SaaS", webConfigFilePath, "${packageLocation}/SaaS", "${packageVersion}"
+                                    
+                                    def customConfigFilePath = "customNuspecConfig.txt"
+                                    patchVersion = getVersion "${packageLocation}/SaaS", "SaaSCustomScripts*"
+                                    packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
+                                    nugetPack "SaaS", customConfigFilePath, "${packageLocation}/SaaS", "${packageVersion}"
                                 }
                             }
                         }
