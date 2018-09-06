@@ -1,4 +1,4 @@
-def call (workspacePath) {
+def call (workspacePath, configFile) {
     bat 'if exist PlatCommon rmdir PlatCommon /s /q'
     dir('../PlatCommon/Reed.Platform') {
         //            def configText = readFile(configFilePath)
@@ -9,16 +9,17 @@ def call (workspacePath) {
             workspacePath += "\\"
         }
 //        def workspacePath = "D:\\workspace\\Pipeline.Tester\\PlatDir\\"
-        def configText = """etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll
-etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb
-etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll
-etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb
-etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll
-etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb
-etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll
-etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb
-etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.dll
-etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.pdb"""
+//        def configText = """etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.dll
+//etc\\src\\Benefits\\Services\\Reed.Benefits.Api\\obj\\Release\\Reed.Benefits.Api.pdb
+//etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.dll
+//etc\\src\\Benefits\\Web\\Reed.Benefits.Web.Models\\obj\\Release\\Reed.Benefits.Web.Models.pdb
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.dll
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Communication.Hig\\obj\\Release\\Reed.Communication.Hig.pdb
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.dll
+//etc\\src\\Services\\Reed.Communication\\Delivery\\Reed.Sdk.Communication\\obj\\Release\\Reed.Sdk.Communication.pdb
+//etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.dll
+//etc\\src\\Services\\Reed.Communication\\Reed.Api.Communication\\obj\\Release\\Reed.Api.Communication.pdb"""
+        def configText = readFile(configFile)
         def configLines = configText.split('\n')
         def lineIndex = configLines.size() - 1
         for(i in 0..lineIndex) {
