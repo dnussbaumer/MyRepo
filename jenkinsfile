@@ -347,12 +347,12 @@ pipeline {
                                     patchVersion = getVersion "${packageLocation}/SaaS", "iAMWeb*"
                                     packageVersion = "3.1.${patchVersion}"
 //                                    def webConfigFilePath = "webNuspecConfig.txt"
-                                    nugetPack "SaaSWeb", webConfigFilePath, "${packageLocation}/SaaS", "${packageVersion}"
+                                    nugetPack "SaaSWeb", configFilePath, "${packageLocation}/SaaS", "${packageVersion}"
                                     
 //                                    def customConfigFilePath = "customNuspecConfig.txt"
                                     patchVersion = getVersion "${packageLocation}/SaaS", "SaaSCustomScripts*"
                                     packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
-                                    nugetPack "SaaSCustom", customConfigFilePath, "${packageLocation}/SaaS", "${packageVersion}"
+                                    nugetPack "SaaSCustom", configFilePath, "${packageLocation}/SaaS", "${packageVersion}"
                                 }
                             }
                         }
