@@ -1,0 +1,14 @@
+Curly,Source Code/iAM.Web/iAMWeb/iAMWeb.CI.nuspec
+Curly,Source Code/iAM.Web.SelfService/iAMSelfService/iAMSelfService.CI.nuspec
+Curly,Source Code/iAM.ManualTakeover/MyTakeoverWeb/MyTakeoverWeb.CI.nuspec
+Curly,Configuration/CustomScripts/CustomScripts_CI.nuspec
+Curly,Source Code/Reed.ClientIntegration/Cigna/PrintDistribution/PrintDistribution.App/Reed.ClientIntegration.Cigna.PrintDistribution.App.CI.nuspec
+Curly,Source Code/iAM.Reporting/ReportDefinitions/ReportDefinitions.CI.nuspec
+Curly,Source Code/Reed.Reporting/Reed.ReportDefinitions/Reed.ReportDefinitions.CI.nuspec
+Curly,Source Code/iAm.iAMToAcclaim/iAM.iAMToAcclaim.FileTransferService/iAM.iAMToAcclaim.FileTransferService.CI.nuspec
+Curly,Source Code/iAM.AcclaimToiAM/Client/iAM.AcclaimToiAM.AutomationHost/iAM.AcclaimToiAM.AutomationHost.CI.nuspec
+Curly,Source Code/iAM.EmployeeRoster/Automation/iAM.EmployeeRoster.Automation/iAM.EmployeeRoster.Automation.Cigna.CI.nuspec
+Curly,Source Code/SSIS/Curly_SSISPackages.nuspec
+CurlyDb,Database/CoreDatabases-branch/LeaveHubDb_Curly/LeaveHubDb_Curly.CI.nuspec
+CurlyDb,Database/CoreDatabases-branch/LeaveClientDb_Curly/LeaveClientDb_Curly.CI.nuspec
+CurlyDb,Database/CoreDatabases-branch/ReportDb_Curly/ReportDb_Curly.CI.nuspec

@@ -1,0 +1,18 @@
+SaaS,Source Code/iAM.Web/iAMWeb/iAMWeb.nuspec
+SaaS,Source Code/Reed.Web.SelfService/ReedSelfService/ReedSelfService.nuspec
+SaaS,Source Code/iAM.ManualTakeover/MyTakeoverWeb/MyTakeoverWeb.nuspec
+SaaS,Configuration/SaaSCustomScripts.nuspec
+SaaS,Source Code/Reed.Custom/Reed.SaaS.Pem/Reed.SaaS.Pem.CI.nuspec
+SaaS,Source Code/iAM.Reporting/ReportDefinitions/ReportDefinitions.CI.nuspec
+SaaS,Source Code/Reed.Reporting/Reed.ReportDefinitions/Reed.ReportDefinitions.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.SvcHost.Export/Reed.SvcHost.Export.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.Svc.Export/Reed.Svc.Export.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.Bll.Export/Reed.Bll.Export.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.Dal.Export/Reed.Dal.Export.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.Export.TimerService/Reed.Export.TimerService.CI.nuspec
+SaaS,Source Code/Reed.Export/Reed.Api.Export/Reed.Api.Export.CI.nuspec
+SaaS,Source Code/SSIS/SaaS_SSISPackages.nuspec
+SaaSDb,Database/CoreDatabases-branch/FeedDb/FeedDb.CI.nuspec
+SaaSDb,Database/CoreDatabases-branch/LeaveHubDb_SaaS/LeaveHubDb_SaaS.CI.nuspec
+SaaSDb,Database/CoreDatabases-branch/LeaveClientDb_SaaS/LeaveClientDb_SaaS.CI.nuspec
+SaaSDb,Database/CoreDatabases-branch/ReportDb_SaaS/ReportDb_SaaS.CI.nuspec
