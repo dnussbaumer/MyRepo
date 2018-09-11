@@ -1,7 +1,7 @@
 def call (workspacePath, configFile) {
     bat 'if exist PlatCommon rmdir PlatCommon /s /q'
     dir('../PlatCommon/Reed.Platform') {
-        checkout([$class: 'TeamFoundationServerScm', password: hudson.util.Secret.fromString('23YNJFnvY!5J'), projectPath: '$/Support/DevOps/Pipeline/AT/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, userName: 'tfsbuild', workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
+        checkout([$class: 'TeamFoundationServerScm', password: hudson.util.Secret.fromString('23YNJFnvY!5J'), projectPath: '$/SaaS/AT/Source Code/Common/Reed.Platform', serverUrl: 'http://coautfssp001/tfs/iAM', useOverwrite: true, useUpdate: true, userName: 'tfsbuild', workspaceName: 'Hudson-${JOB_NAME}-${NODE_NAME}-test'])
         def batScript = ""
         if (!workspacePath.endsWith("\\")) {
             workspacePath += "\\"

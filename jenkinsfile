@@ -52,8 +52,8 @@ pipeline {
         buildStgCurly="${env.BuildStgCurly}"
         runAutoChangePS="${env.RunAutoChangePS}"
 
-        deployChannel='Test' 		//Set Octopus deployment channel. Values are 'Test' or 'Release'
-        packageLocation = '//COAUTFSARH001/Builds/TEST'
+        deployChannel='Release'		//Set Octopus deployment channel. Values are 'Test' or 'Release'
+        packageLocation = '//COAUTFSARH001/Builds/NugetPackages/AT'
         dbBuildLocation = '\\\\COAUTFSARH001\\Builds/AT'
         deployPrefix=''
         deployRS="${env.DeployRS}"
@@ -268,8 +268,8 @@ pipeline {
                                     bat 'del /F etc\\lib\\PlatformAssemblyInfo.cs'
                                     writeFile file: 'etc/lib/PlatformAssemblyInfo.cs', text: "using System.Reflection;\n" +
                                                                                              "[assembly: AssemblyCompany(\"Reed Group, Ltd\")]\n" +
-                                                                                             "[assembly: AssemblyProduct(\"LeavePro™ Platform\")]\n" +
-                                                                                             "[assembly: AssemblyCopyright(\"Copyright © Reed Group, Ltd 2015\")]\n" +
+                                                                                             "[assembly: AssemblyProduct(\"LeaveProâ„¢ Platform\")]\n" +
+                                                                                             "[assembly: AssemblyCopyright(\"Copyright Â© Reed Group, Ltd 2015\")]\n" +
                                                                                              "[assembly: AssemblyTrademark(\"'LeavePro' is a TM of Reed Group, Ltd, Westminster, Colorado\")]\n" +
                                                                                              "[assembly: AssemblyCulture(\"\")] // neutral\n" +
                                                                                              "[assembly: System.Runtime.InteropServices.ComVisible(false)]\n" +
@@ -406,6 +406,10 @@ pipeline {
                                     def packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
                                     def configFilePath = "nuspecConfig.txt"
                                     nugetPack "Curly", configFilePath, "${packageLocation}/Curly", "${packageVersion}"
+
+									patchVersion = getVersion "${packageLocation}/Curly", "CurlyCustomScripts*"
+                                    packageVersion = majorVersion + "." + minorVersion + "." + patchVersion
+                                    nugetPack "CurlyCustom", configFilePath, "${packageLocation}/Curly", "${packageVersion}"
                                 }
                             }
                         }

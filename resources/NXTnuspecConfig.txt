@@ -1,0 +1,3 @@
+Nxt,LeavePro.Nxt.Security/LeavePro.Nxt.Security.at.nuspec
+Nxt,LeavePro.Nxt.UI/LeavePro.Nxt.UI.at.nuspec
+Nxt,LeavePro.Nxt.WebApi/LeavePro.Nxt.WebApi.at.nuspec
